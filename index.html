@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+
+<title>KELVIN // DIGITAL LAB</title>
+
+<!-- GSAP -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --black:#050505;
+  --white:#f5f5f7;
+  --gray:#88888f;
+  --darkgray:#4f4f55;
+  --line:rgba(255,255,255,.09);
+  --blue:#6e9cff;
+  --violet:#927cff;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:auto;
+}
+
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:Inter,system-ui,sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  pointer-events:none;
+  opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection{
+  background:rgba(100,140,255,.3);
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.container{
+  width:min(calc(100% - 40px),1200px);
+  margin:auto;
+}
+
+
+/* LOADER */
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#050505;
+  z-index:9999;
+  display:grid;
+  place-items:center;
+}
+
+.loader-content{
+  width:180px;
+}
+
+.loader-label{
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  color:#777;
+  letter-spacing:.15em;
+  margin-bottom:15px;
+}
+
+.loader-bar{
+  height:1px;
+  background:#222;
+  overflow:hidden;
+}
+
+.loader-progress{
+  height:100%;
+  width:0;
+  background:#fff;
+}
+
+
+/* NAV */
+
+.nav{
+  position:fixed;
+  z-index:100;
+  width:100%;
+  top:0;
+  padding:18px 0;
+}
+
+.nav-inner{
+  width:min(calc(100% - 28px),1180px);
+  height:52px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  transition:.5s ease;
+}
+
+.nav.scrolled .nav-inner{
+  background:rgba(8,8,9,.7);
+  border:1px solid var(--line);
+  border-radius:17px;
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+}
+
+.logo{
+  font-family:"DM Mono",monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+}
+
+.nav-links{
+  display:flex;
+  gap:5px;
+}
+
+.nav-links a{
+  padding:9px 12px;
+  color:#888;
+  font-size:11px;
+  border-radius:9px;
+  transition:.3s;
+}
+
+.nav-links a:hover{
+  color:#fff;
+  background:rgba(255,255,255,.05);
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#777;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+}
+
+.dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#6dffac;
+  box-shadow:0 0 12px rgba(109,255,172,.7);
+}
+
+
+/* HERO */
+
+.hero{
+  height:200svh;
+  position:relative;
+}
+
+.hero-sticky{
+  position:sticky;
+  top:0;
+  height:100svh;
+  overflow:hidden;
+}
+
+.hero-background{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(
+      circle at 70% 48%,
+      rgba(65,105,255,.10),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 25% 65%,
+      rgba(111,75,255,.06),
+      transparent 30%
+    );
+}
+
+.hero-grid{
+  position:absolute;
+  inset:0;
+  opacity:.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:90px 90px;
+  mask-image:linear-gradient(
+    to bottom,
+    transparent,
+    black 25%,
+    black 70%,
+    transparent
+  );
+}
+
+
+/* HERO TYPE */
+
+.hero-copy{
+  position:absolute;
+  left:6%;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:5;
+  will-change:transform,opacity;
+}
+
+.hero-kicker{
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  color:#777;
+  letter-spacing:.17em;
+  margin-bottom:30px;
+}
+
+.hero-title{
+  font-size:clamp(65px,12vw,155px);
+  font-weight:700;
+  letter-spacing:-.085em;
+  line-height:.82;
+}
+
+.hero-title-line{
+  display:block;
+  overflow:hidden;
+}
+
+.hero-title-word{
+  display:block;
+  will-change:transform;
+}
+
+.hero-title .muted{
+  color:#55555b;
+}
+
+.hero-description{
+  width:430px;
+  margin-top:42px;
+  color:#85858b;
+  font-size:14px;
+  line-height:1.75;
+}
+
+.hero-button{
+  display:inline-flex;
+  margin-top:30px;
+  padding:14px 18px;
+  border-radius:13px;
+  background:#f5f5f7;
+  color:#050505;
+  font-size:11px;
+}
+
+
+/* CORE */
+
+.hero-object{
+  position:absolute;
+  width:min(45vw,600px);
+  height:min(45vw,600px);
+  min-width:350px;
+  min-height:350px;
+  right:5%;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:3;
+  will-change:transform;
+}
+
+.orb{
+  position:absolute;
+  inset:18%;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle at 32% 25%,
+      #dbe5ff,
+      #769cff 18%,
+      #4d5bc9 43%,
+      #17172d 70%,
+      #060609 100%
+    );
+  box-shadow:
+    0 0 100px rgba(82,115,255,.35),
+    inset -40px -30px 50px rgba(0,0,0,.6);
+  will-change:transform;
+}
+
+.orb::before{
+  content:"";
+  position:absolute;
+  inset:18%;
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:50%;
+}
+
+.orbit{
+  position:absolute;
+  inset:5%;
+  border:1px solid rgba(120,150,255,.18);
+  border-radius:50%;
+}
+
+.orbit.two{
+  inset:20%;
+  border-color:rgba(160,130,255,.18);
+  transform:rotate(65deg);
+}
+
+.orbit.three{
+  inset:33%;
+  border-color:rgba(255,255,255,.13);
+  transform:rotate(-30deg);
+}
+
+.orbit-dot{
+  position:absolute;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#b7c9ff;
+  box-shadow:0 0 18px #6d8fff;
+  left:50%;
+  top:5%;
+}
+
+.object-label{
+  position:absolute;
+  bottom:5%;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-family:"DM Mono",monospace;
+  color:#55555d;
+  font-size:8px;
+  letter-spacing:.16em;
+}
+
+
+/* TRANSFORMATION SCENE */
+
+.transform-label{
+  position:absolute;
+  left:50%;
+  bottom:30px;
+  transform:translateX(-50%);
+  color:#4d4d53;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  letter-spacing:.16em;
+}
+
+
+/* INTRO */
+
+.intro{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding:120px 0;
+}
+
+.intro-inner{
+  max-width:1050px;
+}
+
+.intro-small{
+  font-family:"DM Mono",monospace;
+  color:#55555c;
+  font-size:9px;
+  letter-spacing:.15em;
+  margin-bottom:35px;
+}
+
+.intro-text{
+  font-size:clamp(38px,6vw,82px);
+  line-height:1;
+  letter-spacing:-.06em;
+}
+
+.intro-text .fade{
+  color:#505057;
+}
+
+
+/* WORK */
+
+.work{
+  position:relative;
+}
+
+.work-header{
+  padding:130px 0 70px;
+}
+
+.section-number{
+  font-family:"DM Mono",monospace;
+  color:#55555b;
+  font-size:9px;
+  letter-spacing:.15em;
+}
+
+.work-title{
+  margin-top:25px;
+  font-size:clamp(48px,7vw,92px);
+  letter-spacing:-.065em;
+  line-height:.9;
+}
+
+
+/* PROJECT SCENES */
+
+.project-scene{
+  height:115vh;
+  position:relative;
+}
+
+.project-pin{
+  height:100vh;
+  position:sticky;
+  top:0;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+
+.project-copy{
+  position:absolute;
+  left:7%;
+  top:50%;
+  transform:translateY(-50%);
+  width:330px;
+  z-index:10;
+}
+
+.project-index{
+  font-family:"DM Mono",monospace;
+  color:#55555b;
+  font-size:9px;
+  letter-spacing:.14em;
+}
+
+.project-name{
+  margin-top:17px;
+  font-size:clamp(40px,5vw,68px);
+  letter-spacing:-.06em;
+  line-height:.9;
+}
+
+.project-description{
+  margin-top:22px;
+  color:#818187;
+  font-size:13px;
+  line-height:1.75;
+}
+
+.project-visual{
+  position:absolute;
+  width:54vw;
+  height:68vh;
+  max-width:760px;
+  max-height:700px;
+  right:5%;
+  top:50%;
+  transform:translateY(-50%);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:35px;
+  overflow:hidden;
+  background:#09090b;
+  will-change:transform,border-radius;
+}
+
+
+/* CLIMA */
+
+.clima-visual{
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(70,125,255,.14),
+      transparent 40%
+    ),
+    #07090d;
+}
+
+.clima-globe{
+  position:absolute;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(100,150,255,.3);
+  box-shadow:
+    0 0 100px rgba(70,110,255,.1),
+    inset 0 0 70px rgba(70,110,255,.07);
+}
+
+.clima-globe::before,
+.clima-globe::after{
+  content:"";
+  position:absolute;
+  inset:12%;
+  border-radius:50%;
+  border:1px solid rgba(110,160,255,.14);
+}
+
+.clima-globe::after{
+  inset:27%;
+}
+
+.signal{
+  position:absolute;
+  width:130%;
+  height:100px;
+  left:-15%;
+  top:50%;
+  border-top:1px solid rgba(115,165,255,.6);
+  border-radius:50%;
+  transform:rotate(-10deg);
+  animation:signal 5s ease-in-out infinite;
+}
+
+.signal.two{
+  top:55%;
+  opacity:.35;
+  animation-delay:-2s;
+}
+
+@keyframes signal{
+  0%,100%{
+    transform:translateY(8px) rotate(-10deg);
+  }
+  50%{
+    transform:translateY(-8px) rotate(-10deg);
+  }
+}
+
+
+/* STUDENT */
+
+.student-visual{
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(150,125,255,.14),
+      transparent 45%
+    ),
+    #08080b;
+}
+
+.node{
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#aaa0ff;
+  box-shadow:0 0 25px rgba(150,130,255,.8);
+}
+
+.node::after{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:1px;
+  left:5px;
+  top:5px;
+  background:linear-gradient(
+    90deg,
+    rgba(160,140,255,.5),
+    transparent
+  );
+  transform-origin:left;
+}
+
+.s1{left:18%;top:30%}
+.s2{left:48%;top:47%}
+.s3{right:18%;top:28%}
+.s4{left:27%;bottom:20%}
+.s5{right:22%;bottom:25%}
+
+.s1::after{transform:rotate(25deg)}
+.s2::after{transform:rotate(-18deg)}
+.s3::after{transform:rotate(150deg)}
+.s4::after{transform:rotate(25deg)}
+.s5::after{transform:rotate(195deg)}
+
+.connection-ring{
+  position:absolute;
+  width:250px;
+  height:250px;
+  border:1px solid rgba(160,140,255,.16);
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+
+
+/* AI */
+
+.ai-visual{
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(100,85,255,.18),
+      transparent 45%
+    ),
+    #08080c;
+}
+
+.ai-center{
+  position:absolute;
+  width:130px;
+  height:130px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:1px solid rgba(160,145,255,.45);
+  box-shadow:0 0 100px rgba(100,80,255,.15);
+}
+
+.ai-center::before{
+  content:"";
+  position:absolute;
+  inset:30px;
+  border-radius:50%;
+  background:radial-gradient(
+    circle,
+    #e2ddff,
+    #7167ce 50%,
+    #18172d
+  );
+}
+
+.ai-point{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#c9c2ff;
+  box-shadow:0 0 22px rgba(200,190,255,.8);
+}
+
+.ap1{left:15%;top:25%}
+.ap2{right:16%;top:22%}
+.ap3{left:18%;bottom:25%}
+.ap4{right:14%;bottom:24%}
+
+
+/* ROBOTICS */
+
+.robot-visual{
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255,255,255,.07),
+      transparent 45%
+    ),
+    #080808;
+}
+
+.robot{
+  position:absolute;
+  width:300px;
+  height:280px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+
+.robot-joint{
+  position:absolute;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.2);
+  background:radial-gradient(
+    circle at 30% 25%,
+    #777,
+    #222 55%,
+    #080808
+  );
+  z-index:3;
+}
+
+.rj1{
+  left:10px;
+  bottom:20px;
+}
+
+.rj2{
+  left:105px;
+  top:100px;
+}
+
+.rj3{
+  right:10px;
+  top:30px;
+}
+
+.robot-arm{
+  position:absolute;
+  height:25px;
+  border-radius:20px;
+  background:linear-gradient(
+    90deg,
+    #19191c,
+    #77777c,
+    #222226
+  );
+  border:1px solid rgba(255,255,255,.15);
+  transform-origin:left center;
+}
+
+.ra1{
+  width:125px;
+  left:60px;
+  bottom:52px;
+  transform:rotate(-42deg);
+}
+
+.ra2{
+  width:110px;
+  left:140px;
+  top:120px;
+  transform:rotate(-43deg);
+}
+
+.gripper{
+  position:absolute;
+  width:50px;
+  height:35px;
+  right:-20px;
+  top:8px;
+  border-right:2px solid #aaa;
+  border-bottom:2px solid #aaa;
+  transform:rotate(-35deg);
+}
+
+
+/* ABOUT */
+
+.about{
+  padding:180px 0;
+  border-top:1px solid var(--line);
+}
+
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:100px;
+}
+
+.about-title{
+  font-size:clamp(40px,5vw,70px);
+  line-height:.95;
+  letter-spacing:-.06em;
+}
+
+.about-copy{
+  color:#818187;
+  font-size:14px;
+  line-height:1.8;
+}
+
+.about-copy p+p{
+  margin-top:22px;
+}
+
+
+/* TOOLKIT */
+
+.toolkit{
+  padding:130px 0;
+}
+
+.toolkit-title{
+  margin-top:25px;
+  font-size:clamp(50px,7vw,90px);
+  line-height:.9;
+  letter-spacing:-.06em;
+}
+
+.tools{
+  margin-top:70px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);
+  border-radius:28px;
+  overflow:hidden;
+}
+
+.tool{
+  padding:28px;
+  min-height:145px;
+  background:#080808;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  transition:.4s;
+}
+
+.tool:hover{
+  background:#101012;
+}
+
+.tool-number{
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  color:#555;
+}
+
+.tool-name{
+  margin-top:45px;
+  font-size:14px;
+}
+
+
+/* ACHIEVEMENTS */
+
+.achievements{
+  padding:130px 0;
+  border-top:1px solid var(--line);
+}
+
+.achievement{
+  display:grid;
+  grid-template-columns:100px 1fr auto;
+  align-items:center;
+  gap:25px;
+  padding:28px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.year{
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  color:#555;
+}
+
+.achievement-name{
+  font-size:17px;
+}
+
+.achievement-org{
+  margin-top:6px;
+  color:#666;
+  font-size:11px;
+}
+
+.achievement-place{
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  color:#888;
+}
+
+
+/* CONTACT */
+
+.contact{
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+  border-top:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+}
+
+.contact-light{
+  position:absolute;
+  width:700px;
+  height:700px;
+  border-radius:50%;
+  right:-250px;
+  top:50%;
+  transform:translateY(-50%);
+  background:radial-gradient(
+    circle,
+    rgba(75,105,255,.12),
+    transparent 65%
+  );
+  filter:blur(25px);
+}
+
+.contact-content{
+  position:relative;
+  z-index:2;
+}
+
+.contact-title{
+  font-size:clamp(60px,11vw,140px);
+  line-height:.84;
+  letter-spacing:-.08em;
+}
+
+.contact-title span{
+  color:#55555b;
+}
+
+.email{
+  display:inline-block;
+  margin-top:50px;
+  font-family:"DM Mono",monospace;
+  font-size:12px;
+  color:#aaa;
+  border-bottom:1px solid #555;
+  padding-bottom:8px;
+}
+
+
+/* FOOTER */
+
+footer{
+  border-top:1px solid var(--line);
+  padding:25px 0;
+}
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  color:#555;
+  letter-spacing:.08em;
+}
+
+
+/* CURSOR */
+
+.cursor{
+  position:fixed;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#fff;
+  pointer-events:none;
+  z-index:2000;
+  mix-blend-mode:difference;
+  transform:translate(-50%,-50%);
+}
+
+.cursor.active{
+  width:38px;
+  height:38px;
+  opacity:.65;
+}
+
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .container{
+    width:calc(100% - 28px);
+  }
+
+  .nav-links{
+    display:none;
+  }
+
+  .hero{
+    height:150svh;
+  }
+
+  .hero-copy{
+    left:20px;
+    top:27%;
+  }
+
+  .hero-title{
+    font-size:18vw;
+  }
+
+  .hero-description{
+    width:min(340px,85vw);
+    font-size:13px;
+  }
+
+  .hero-object{
+    width:360px;
+    height:360px;
+    min-width:0;
+    min-height:0;
+    right:-80px;
+    top:68%;
+  }
+
+  .intro{
+    min-height:75vh;
+  }
+
+  .intro-text{
+    font-size:36px;
+  }
+
+  .work-header{
+    padding-top:100px;
+  }
+
+  .project-scene{
+    height:100vh;
+  }
+
+  .project-pin{
+    display:block;
+  }
+
+  .project-copy{
+    left:20px;
+    top:13%;
+    transform:none;
+    width:calc(100% - 40px);
+  }
+
+  .project-name{
+    font-size:48px;
+  }
+
+  .project-description{
+    max-width:340px;
+  }
+
+  .project-visual{
+    width:calc(100% - 28px);
+    height:48vh;
+    max-width:none;
+    max-height:none;
+    left:14px;
+    right:auto;
+    top:auto;
+    bottom:5%;
+    transform:none;
+    border-radius:25px;
+  }
+
+  .about{
+    padding:110px 0;
+  }
+
+  .about-grid{
+    grid-template-columns:1fr;
+    gap:50px;
+  }
+
+  .tools{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .tool{
+    min-height:110px;
+    padding:20px;
+  }
+
+  .tool-name{
+    margin-top:25px;
+  }
+
+  .achievement{
+    grid-template-columns:55px 1fr;
+  }
+
+  .achievement-place{
+    grid-column:2;
+  }
+
+  .contact{
+    min-height:70vh;
+  }
+
+  .contact-title{
+    font-size:16vw;
+  }
+
+  .footer{
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .cursor{
+    display:none;
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+<!-- LOADER -->
+
+<div class="loader">
+  <div class="loader-content">
+    <div class="loader-label">
+      KELVIN // DIGITAL LAB
+    </div>
+    <div class="loader-bar">
+      <div class="loader-progress"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- NAV -->
+
+<nav class="nav">
+
+  <div class="nav-inner">
+
+    <a href="#top" class="logo">
+      KELVIN // DIGITAL LAB
+    </a>
+
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <div class="nav-right">
+      <span class="dot"></span>
+      BUILD MODE
+    </div>
+
+  </div>
+
+</nav>
+
+
+<main id="top">
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-sticky">
+
+    <div class="hero-background"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-copy">
+
+      <div class="hero-kicker">
+        WEB · AI · ROBOTICS · TECHNOLOGY
+      </div>
+
+      <h1 class="hero-title">
+
+        <span class="hero-title-line">
+          <span class="hero-title-word">KELVIN</span>
+        </span>
+
+        <span class="hero-title-line">
+          <span class="hero-title-word">BUILDS</span>
+        </span>
+
+        <span class="hero-title-line">
+          <span class="hero-title-word muted">SYSTEMS.</span>
+        </span>
+
+      </h1>
+
+      <p class="hero-description">
+        Exploring technology through software,
+        artificial intelligence, robotics and
+        creative digital projects.
+      </p>
+
+      <a href="#work" class="hero-button">
+        Explore work
+      </a>
+
+    </div>
+
+
+    <div class="hero-object">
+
+      <div class="orbit">
+        <span class="orbit-dot"></span>
+      </div>
+
+      <div class="orbit two"></div>
+      <div class="orbit three"></div>
+
+      <div class="orb"></div>
+
+      <div class="object-label">
+        DIGITAL SYSTEM / 001
+      </div>
+
+    </div>
+
+
+    <div class="transform-label">
+      SCROLL TO EXPLORE
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- INTRO -->
+
+<section class="intro">
+
+  <div class="container">
+
+    <div class="intro-inner">
+
+      <div class="intro-small">
+        THE IDEA
+      </div>
+
+      <div class="intro-text">
+        Technology becomes interesting
+        <span class="fade">
+          when it solves something real.
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- WORK -->
+
+<section class="work" id="work">
+
+  <div class="container work-header">
+
+    <div class="section-number">
+      01 / SELECTED WORK
+    </div>
+
+    <h2 class="work-title">
+      Things I've<br>
+      been building.
+    </h2>
+
+  </div>
+
+
+  <!-- CLIMASENSE -->
+
+  <section class="project-scene">
+
+    <div class="project-pin">
+
+      <div class="project-copy">
+
+        <div class="project-index">
+          PROJECT 001 · ENVIRONMENTAL TECHNOLOGY
+        </div>
+
+        <h3 class="project-name">
+          ClimaSense
+        </h3>
+
+        <p class="project-description">
+          A monitoring concept exploring how environmental
+          information can be visualized and turned into
+          useful signals.
+        </p>
+
+      </div>
+
+
+      <div class="project-visual clima-visual">
+
+        <div class="clima-globe"></div>
+
+        <div class="signal"></div>
+        <div class="signal two"></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- STUDENT CONNECT -->
+
+  <section class="project-scene">
+
+    <div class="project-pin">
+
+      <div class="project-copy">
+
+        <div class="project-index">
+          PROJECT 002 · WEB PLATFORM
+        </div>
+
+        <h3 class="project-name">
+          Student<br>Connect
+        </h3>
+
+        <p class="project-description">
+          A web platform concept focused on connecting
+          students, information and digital experiences.
+        </p>
+
+      </div>
+
+
+      <div class="project-visual student-visual">
+
+        <div class="connection-ring"></div>
+
+        <span class="node s1"></span>
+        <span class="node s2"></span>
+        <span class="node s3"></span>
+        <span class="node s4"></span>
+        <span class="node s5"></span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- AI FOR GOOD -->
+
+  <section class="project-scene">
+
+    <div class="project-pin">
+
+      <div class="project-copy">
+
+        <div class="project-index">
+          PROJECT 003 · ARTIFICIAL INTELLIGENCE
+        </div>
+
+        <h3 class="project-name">
+          AI for<br>Good
+        </h3>
+
+        <p class="project-description">
+          Exploring artificial intelligence as a tool for
+          solving meaningful problems and creating
+          positive impact.
+        </p>
+
+      </div>
+
+
+      <div class="project-visual ai-visual">
+
+        <div class="ai-center"></div>
+
+        <span class="ai-point ap1"></span>
+        <span class="ai-point ap2"></span>
+        <span class="ai-point ap3"></span>
+        <span class="ai-point ap4"></span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ROBOTICS -->
+
+  <section class="project-scene">
+
+    <div class="project-pin">
+
+      <div class="project-copy">
+
+        <div class="project-index">
+          PROJECT 004 · ROBOTICS
+        </div>
+
+        <h3 class="project-name">
+          Robotics
+        </h3>
+
+        <p class="project-description">
+          Hands-on exploration of robotics, engineering,
+          problem solving and building systems that interact
+          with the physical world.
+        </p>
+
+      </div>
+
+
+      <div class="project-visual robot-visual">
+
+        <div class="robot">
+
+          <div class="robot-arm ra1"></div>
+          <div class="robot-arm ra2"></div>
+
+          <div class="robot-joint rj1"></div>
+          <div class="robot-joint rj2"></div>
+          <div class="robot-joint rj3"></div>
+
+          <div class="gripper"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section class="about" id="about">
+
+  <div class="container">
+
+    <div class="section-number">
+      02 / ABOUT
+    </div>
+
+    <div class="about-grid" style="margin-top:60px;">
+
+      <h2 class="about-title">
+        Curious by nature.
+        <br><br>
+        Builder by choice.
+      </h2>
+
+      <div class="about-copy">
+
+        <p>
+          I'm Kelvin — a developer exploring the intersection
+          of software, artificial intelligence, robotics and
+          creative technology.
+        </p>
+
+        <p>
+          I enjoy turning ideas into working digital experiences,
+          experimenting with technologies and learning
+          through building.
+        </p>
+
+        <p>
+          The goal is simple: keep learning, keep building,
+          and create technology that matters.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- TOOLKIT -->
+
+<section class="toolkit" id="toolkit">
+
+  <div class="container">
+
+    <div class="section-number">
+      03 / TOOLKIT
+    </div>
+
+    <h2 class="toolkit-title">
+      Tools I use<br>
+      to build.
+    </h2>
+
+    <div class="tools">
+
+      <div class="tool">
+        <div class="tool-number">01</div>
+        <div class="tool-name">HTML</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">02</div>
+        <div class="tool-name">CSS</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">03</div>
+        <div class="tool-name">JavaScript</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">04</div>
+        <div class="tool-name">React</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">05</div>
+        <div class="tool-name">Python</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">06</div>
+        <div class="tool-name">C++</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">07</div>
+        <div class="tool-name">AI</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">08</div>
+        <div class="tool-name">Robotics</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">09</div>
+        <div class="tool-name">Git</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">10</div>
+        <div class="tool-name">GitHub</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">11</div>
+        <div class="tool-name">Node.js</div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-number">12</div>
+        <div class="tool-name">Vite</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ACHIEVEMENTS -->
+
+<section class="achievements">
+
+  <div class="container">
+
+    <div class="section-number">
+      04 / ACHIEVEMENTS
+    </div>
+
+    <div style="margin-top:55px;">
+
+      <div class="achievement">
+
+        <div class="year">2024</div>
+
+        <div>
+          <div class="achievement-name">
+            FLL Masterpiece
+          </div>
+
+          <div class="achievement-org">
+            My Redeemer Robotics Team
+          </div>
+        </div>
+
+        <div class="achievement-place">
+          1ST PLACE
+        </div>
+
+      </div>
+
+
+      <div class="achievement">
+
+        <div class="year">2025</div>
+
+        <div>
+          <div class="achievement-name">
+            AI for Good
+          </div>
+
+          <div class="achievement-org">
+            Ghana Nationals · Global Summit
+          </div>
+        </div>
+
+        <div class="achievement-place">
+          1ST · 3RD WORLDWIDE
+        </div>
+
+      </div>
+
+
+      <div class="achievement">
+
+        <div class="year">2025</div>
+
+        <div>
+          <div class="achievement-name">
+            RoboFest Nationals
+          </div>
+
+          <div class="achievement-org">
+            My Redeemer Robotics Team
+          </div>
+        </div>
+
+        <div class="achievement-place">
+          3RD PLACE
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section class="contact" id="contact">
+
+  <div class="contact-light"></div>
+
+  <div class="container">
+
+    <div class="contact-content">
+
+      <div class="section-number">
+        05 / CONTACT
+      </div>
+
+      <h2 class="contact-title" style="margin-top:35px;">
+        Have an<br>
+        idea?
+        <span>Let's build.</span>
+      </h2>
+
+      <a
+        class="email"
+        href="mailto:kelvinbanor5@gmail.com"
+      >
+        kelvinbanor5@gmail.com
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+  <div class="container footer">
+
+    <span>
+      © 2025 KELVIN // DIGITAL LAB
+    </span>
+
+    <span>
+      WEB · AI · ROBOTICS · TECHNOLOGY
+    </span>
+
+  </div>
+
+</footer>
+
+
+<div class="cursor"></div>
+
+
+<script>
+
+/* =========================
+   LOADER
+========================= */
+
+window.addEventListener("load",()=>{
+
+  const loader = document.querySelector(".loader");
+  const progress = document.querySelector(".loader-progress");
+
+  gsap.to(progress,{
+    width:"100%",
+    duration:1.1,
+    ease:"power3.inOut",
+    onComplete:()=>{
+      gsap.to(loader,{
+        opacity:0,
+        duration:.7,
+        ease:"power2.out",
+        onComplete:()=>{
+          loader.style.display="none";
+          initAnimations();
+        }
+      });
+    }
+  });
+
+});
+
+
+/* =========================
+   GSAP
+========================= */
+
+gsap.registerPlugin(ScrollTrigger);
+
+
+/* =========================
+   NAV
+========================= */
+
+const nav = document.querySelector(".nav");
+
+ScrollTrigger.create({
+
+  start:"top -50",
+
+  onUpdate:self=>{
+    nav.classList.toggle(
+      "scrolled",
+      self.scroll()>50
+    );
+  }
+
+});
+
+
+/* =========================
+   HERO CINEMATIC
+========================= */
+
+function initAnimations(){
+
+  const hero = document.querySelector(".hero");
+  const copy = document.querySelector(".hero-copy");
+  const object = document.querySelector(".hero-object");
+  const orb = document.querySelector(".orb");
+
+  const words = document.querySelectorAll(
+    ".hero-title-word"
+  );
+
+  const tl = gsap.timeline({
+
+    scrollTrigger:{
+      trigger:hero,
+      start:"top top",
+      end:"bottom bottom",
+      scrub:1.1
+    }
+
+  });
+
+
+  /*
+    THE MAIN TRANSFORMATION
+
+    The title moves apart.
+    The object expands.
+    The scene gets quieter.
+  */
+
+  tl.to(words[0],{
+    x:-170,
+    y:-50,
+    scale:.72,
+    opacity:.55,
+    ease:"none"
+  },0)
+
+  .to(words[1],{
+    x:180,
+    y:5,
+    scale:.72,
+    opacity:.35,
+    ease:"none"
+  },0)
+
+  .to(words[2],{
+    x:-130,
+    y:60,
+    scale:.72,
+    opacity:.18,
+    ease:"none"
+  },0)
+
+  .to(copy,{
+    x:-90,
+    opacity:.18,
+    ease:"none"
+  },0)
+
+  .to(object,{
+    x:"-16vw",
+    scale:2.15,
+    rotate:18,
+    ease:"none"
+  },0)
+
+  .to(orb,{
+    scale:1.18,
+    ease:"none"
+  },0)
+
+  .to(".orbit",{
+    rotation:120,
+    ease:"none"
+  },0)
+
+  .to(".hero-background",{
+    opacity:.35,
+    ease:"none"
+  },0)
+
+  .to(".hero-grid",{
+    opacity:0,
+    ease:"none"
+  },.15);
+
+}
+
+
+/* =========================
+   INTRO REVEAL
+========================= */
+
+gsap.from(".intro-text",{
+
+  y:100,
+  opacity:0,
+
+  scrollTrigger:{
+    trigger:".intro",
+    start:"top 75%",
+    end:"top 25%",
+    scrub:1
+  }
+
+});
+
+
+/* =========================
+   WORK TITLE
+========================= */
+
+gsap.from(".work-title",{
+
+  y:100,
+  opacity:0,
+
+  scrollTrigger:{
+    trigger:".work-header",
+    start:"top 80%",
+    end:"top 40%",
+    scrub:1
+  }
+
+});
+
+
+/* =========================
+   PROJECT TRANSFORMATIONS
+========================= */
+
+document.querySelectorAll(".project-scene")
+.forEach((scene,index)=>{
+
+  const pin = scene.querySelector(".project-pin");
+  const copy = scene.querySelector(".project-copy");
+  const visual = scene.querySelector(".project-visual");
+
+  const timeline = gsap.timeline({
+
+    scrollTrigger:{
+      trigger:scene,
+      start:"top bottom",
+      end:"bottom top",
+      scrub:1.2
+    }
+
+  });
+
+
+  /*
+    ENTER
+  */
+
+  timeline.fromTo(
+    copy,
+    {
+      x:-100,
+      opacity:0
+    },
+    {
+      x:0,
+      opacity:1,
+      ease:"power2.out"
+    },
+    0
+  );
+
+
+  timeline.fromTo(
+    visual,
+    {
+      scale:.78,
+      opacity:0,
+      borderRadius:"80px"
+    },
+    {
+      scale:1,
+      opacity:1,
+      borderRadius:"35px",
+      ease:"power2.out"
+    },
+    0
+  );
+
+
+  /*
+    EXIT
+  */
+
+  timeline.to(
+    copy,
+    {
+      x:-90,
+      opacity:0,
+      ease:"power2.in"
+    },
+    .65
+  );
+
+
+  timeline.to(
+    visual,
+    {
+      scale:.82,
+      x:100,
+      opacity:0,
+      borderRadius:"90px",
+      ease:"power2.in"
+    },
+    .65
+  );
+
+
+  /*
+    Individual visual motion
+  */
+
+  if(index===0){
+
+    gsap.to(".clima-globe",{
+
+      rotation:360,
+
+      scrollTrigger:{
+        trigger:scene,
+        start:"top bottom",
+        end:"bottom top",
+        scrub:2
+      }
+
+    });
+
+  }
+
+
+  if(index===1){
+
+    gsap.to(".connection-ring",{
+
+      rotation:360,
+
+      scrollTrigger:{
+        trigger:scene,
+        start:"top bottom",
+        end:"bottom top",
+        scrub:2
+      }
+
+    });
+
+  }
+
+
+  if(index===2){
+
+    gsap.to(".ai-center",{
+
+      rotation:180,
+      scale:1.15,
+
+      scrollTrigger:{
+        trigger:scene,
+        start:"top bottom",
+        end:"bottom top",
+        scrub:2
+      }
+
+    });
+
+  }
+
+
+  if(index===3){
+
+    gsap.to(".robot",{
+
+      rotation:-8,
+      y:-20,
+
+      scrollTrigger:{
+        trigger:scene,
+        start:"top bottom",
+        end:"bottom top",
+        scrub:2
+      }
+
+    });
+
+  }
+
+});
+
+
+/* =========================
+   ABOUT
+========================= */
+
+gsap.from(".about-title",{
+
+  x:-100,
+  opacity:0,
+
+  scrollTrigger:{
+    trigger:".about",
+    start:"top 70%",
+    end:"top 35%",
+    scrub:1
+  }
+
+});
+
+
+gsap.from(".about-copy",{
+
+  x:100,
+  opacity:0,
+
+  scrollTrigger:{
+    trigger:".about",
+    start:"top 70%",
+    end:"top 35%",
+    scrub:1
+  }
+
+});
+
+
+/* =========================
+   TOOLKIT
+========================= */
+
+gsap.from(".tool",{
+
+  y:60,
+  opacity:0,
+  stagger:.06,
+
+  scrollTrigger:{
+    trigger:".tools",
+    start:"top 80%",
+    end:"top 30%",
+    scrub:1
+  }
+
+});
+
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+
+gsap.from(".achievement",{
+
+  x:-50,
+  opacity:0,
+  stagger:.15,
+
+  scrollTrigger:{
+    trigger:".achievements",
+    start:"top 75%",
+    end:"top 30%",
+    scrub:1
+  }
+
+});
+
+
+/* =========================
+   CONTACT
+========================= */
+
+gsap.from(".contact-title",{
+
+  y:120,
+  opacity:0,
+
+  scrollTrigger:{
+    trigger:".contact",
+    start:"top 80%",
+    end:"top 30%",
+    scrub:1
+  }
+
+});
+
+
+/* =========================
+   MAGNETIC BUTTON
+========================= */
+
+const heroButton =
+document.querySelector(".hero-button");
+
+heroButton.addEventListener("mousemove",e=>{
+
+  const r =
+    heroButton.getBoundingClientRect();
+
+  const x =
+    e.clientX-r.left-r.width/2;
+
+  const y =
+    e.clientY-r.top-r.height/2;
+
+  gsap.to(heroButton,{
+    x:x*.15,
+    y:y*.15,
+    duration:.35,
+    ease:"power3.out"
+  });
+
+});
+
+heroButton.addEventListener("mouseleave",()=>{
+
+  gsap.to(heroButton,{
+    x:0,
+    y:0,
+    duration:.6,
+    ease:"elastic.out(1,.4)"
+  });
+
+});
+
+
+/* =========================
+   CURSOR
+========================= */
+
+const cursor =
+document.querySelector(".cursor");
+
+if(
+  window.matchMedia("(pointer:fine)").matches
+){
+
+  let mx=0;
+  let my=0;
+  let cx=0;
+  let cy=0;
+
+  window.addEventListener("mousemove",e=>{
+
+    mx=e.clientX;
+    my=e.clientY;
+
+  });
+
+  function cursorLoop(){
+
+    cx+=(mx-cx)*.18;
+    cy+=(my-cy)*.18;
+
+    cursor.style.left=cx+"px";
+    cursor.style.top=cy+"px";
+
+    requestAnimationFrame(cursorLoop);
+
+  }
+
+  cursorLoop();
+
+
+  document.querySelectorAll("a")
+  .forEach(link=>{
+
+    link.addEventListener(
+      "mouseenter",
+      ()=>{
+        cursor.classList.add("active");
+      }
+    );
+
+    link.addEventListener(
+      "mouseleave",
+      ()=>{
+        cursor.classList.remove("active");
+      }
+    );
+
+  });
+
+}
+
+
+/* =========================
+   REFRESH SCROLLTRIGGER
+========================= */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    ScrollTrigger.refresh();
+  }
+);
+
+</script>
+
+</body>
+</html>
