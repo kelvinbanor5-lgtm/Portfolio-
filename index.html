@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Kelvin — developer exploring web, AI, robotics and technology.">
+<title>KELVIN // DIGITAL LAB</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#050505;
+  --bg-soft:#090909;
+  --surface:#0d0d0f;
+  --surface-2:#111114;
+  --text:#f5f5f7;
+  --muted:#8d8d94;
+  --line:rgba(255,255,255,.09);
+  --line-bright:rgba(255,255,255,.16);
+  --blue:#6ea8ff;
+  --blue-soft:rgba(110,168,255,.14);
+  --violet:#9b8cff;
+  --radius:28px;
+  --max:1240px;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:100;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+}
+
+::selection{
+  background:rgba(110,168,255,.28);
+  color:#fff;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button{
+  font:inherit;
+}
+
+.container{
+  width:min(calc(100% - 40px),var(--max));
+  margin:auto;
+}
+
+/* LOADER */
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#050505;
+  z-index:9999;
+  display:grid;
+  place-items:center;
+  transition:opacity .8s cubic-bezier(.22,1,.36,1),
+             visibility .8s;
+}
+
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-inner{
+  text-align:center;
+}
+
+.loader-mark{
+  font-family:"DM Mono",monospace;
+  font-size:12px;
+  letter-spacing:.18em;
+  color:#aaa;
+  margin-bottom:18px;
+}
+
+.loader-line{
+  width:150px;
+  height:1px;
+  background:rgba(255,255,255,.12);
+  overflow:hidden;
+}
+
+.loader-progress{
+  height:100%;
+  width:0;
+  background:#fff;
+  animation:load 1.2s cubic-bezier(.65,0,.35,1) forwards;
+}
+
+@keyframes load{
+  to{width:100%}
+}
+
+/* NAV */
+
+.nav{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:50;
+  padding:18px 0;
+  transition:.4s ease;
+}
+
+.nav.scrolled{
+  padding:10px 0;
+}
+
+.nav-inner{
+  width:min(calc(100% - 28px),1180px);
+  margin:auto;
+  height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 17px;
+  border:1px solid transparent;
+  transition:.4s ease;
+}
+
+.nav.scrolled .nav-inner{
+  background:rgba(10,10,11,.72);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border-color:var(--line);
+  border-radius:18px;
+  box-shadow:0 10px 40px rgba(0,0,0,.2);
+}
+
+.logo{
+  font-family:"DM Mono",monospace;
+  font-size:11px;
+  letter-spacing:.13em;
+}
+
+.nav-links{
+  display:flex;
+  gap:8px;
+}
+
+.nav-links a{
+  font-size:12px;
+  color:#aaa;
+  padding:9px 12px;
+  border-radius:10px;
+  transition:.3s ease;
+}
+
+.nav-links a:hover{
+  color:#fff;
+  background:rgba(255,255,255,.06);
+}
+
+.nav-status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  color:#85858b;
+  letter-spacing:.08em;
+}
+
+.status-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#6dffad;
+  box-shadow:0 0 12px rgba(109,255,173,.6);
+}
+
+/* HERO */
+
+.hero{
+  min-height:155svh;
+  position:relative;
+}
+
+.hero-sticky{
+  height:100svh;
+  position:sticky;
+  top:0;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+
+.hero-glow{
+  position:absolute;
+  width:65vw;
+  height:65vw;
+  max-width:800px;
+  max-height:800px;
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(circle,
+      rgba(74,125,255,.13) 0%,
+      rgba(86,67,190,.07) 32%,
+      transparent 68%);
+  filter:blur(40px);
+  pointer-events:none;
+}
+
+.hero-grid{
+  position:absolute;
+  inset:0;
+  opacity:.18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:linear-gradient(to bottom,transparent,black 20%,black 70%,transparent);
+}
+
+.hero-content{
+  position:relative;
+  z-index:4;
+  width:min(calc(100% - 40px),var(--max));
+  margin:auto;
+  will-change:transform,opacity;
+}
+
+.eyebrow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:"DM Mono",monospace;
+  color:#77777e;
+  font-size:10px;
+  letter-spacing:.14em;
+  margin-bottom:28px;
+}
+
+.eyebrow::before{
+  content:"";
+  width:28px;
+  height:1px;
+  background:#666;
+}
+
+.hero-title{
+  font-size:clamp(58px,11vw,148px);
+  line-height:.86;
+  letter-spacing:-.075em;
+  font-weight:700;
+  max-width:1050px;
+}
+
+.hero-title span{
+  display:block;
+}
+
+.hero-title .dim{
+  color:#77777d;
+}
+
+.hero-sub{
+  margin-top:40px;
+  max-width:460px;
+  color:#929298;
+  font-size:15px;
+  line-height:1.75;
+}
+
+.hero-actions{
+  display:flex;
+  gap:10px;
+  margin-top:32px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  padding:0 18px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  font-size:12px;
+  transition:
+    transform .35s cubic-bezier(.22,1,.36,1),
+    background .3s,
+    border-color .3s;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+  border-color:var(--line-bright);
+}
+
+.btn.primary{
+  background:#f5f5f7;
+  color:#050505;
+}
+
+.btn.secondary{
+  color:#aaa;
+  background:rgba(255,255,255,.025);
+}
+
+/* HERO CORE */
+
+.hero-core{
+  position:absolute;
+  width:min(46vw,540px);
+  height:min(46vw,540px);
+  min-width:300px;
+  min-height:300px;
+  right:4%;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:2;
+  pointer-events:none;
+  will-change:transform;
+}
+
+.core-aura{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(84,128,255,.18),
+    rgba(117,84,255,.08) 35%,
+    transparent 68%);
+  filter:blur(25px);
+  animation:aura 7s ease-in-out infinite;
+}
+
+@keyframes aura{
+  0%,100%{transform:scale(.96);opacity:.7}
+  50%{transform:scale(1.05);opacity:1}
+}
+
+.core-ring{
+  position:absolute;
+  inset:9%;
+  border:1px solid rgba(130,158,255,.22);
+  border-radius:50%;
+  animation:spin 22s linear infinite;
+}
+
+.core-ring.r2{
+  inset:20%;
+  border-color:rgba(167,143,255,.2);
+  animation-direction:reverse;
+  animation-duration:16s;
+}
+
+.core-ring.r3{
+  inset:31%;
+  border-color:rgba(255,255,255,.13);
+  animation-duration:30s;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.core{
+  position:absolute;
+  width:34%;
+  height:34%;
+  left:33%;
+  top:33%;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%,#c9dbff 0%,#6e9cff 20%,#455bd1 48%,#17152d 72%,#08080c 100%);
+  box-shadow:
+    0 0 60px rgba(82,122,255,.4),
+    inset -25px -20px 40px rgba(0,0,0,.5);
+  animation:coreFloat 5s ease-in-out infinite;
+}
+
+.core::after{
+  content:"";
+  position:absolute;
+  inset:17%;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.32);
+  box-shadow:0 0 30px rgba(255,255,255,.08);
+}
+
+@keyframes coreFloat{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.035)}
+}
+
+.core-label{
+  position:absolute;
+  left:50%;
+  bottom:5%;
+  transform:translateX(-50%);
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  letter-spacing:.16em;
+  color:#65656d;
+  white-space:nowrap;
+}
+
+/* SCROLL HINT */
+
+.scroll-hint{
+  position:absolute;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:9px;
+  color:#666;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  letter-spacing:.16em;
+}
+
+.scroll-line{
+  width:1px;
+  height:35px;
+  background:linear-gradient(#777,transparent);
+  animation:scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes scrollLine{
+  0%,100%{opacity:.3;transform:scaleY(.5)}
+  50%{opacity:1;transform:scaleY(1)}
+}
+
+/* GENERAL */
+
+section{
+  position:relative;
+}
+
+.section{
+  padding:150px 0;
+}
+
+.section-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:30px;
+  margin-bottom:70px;
+}
+
+.section-number{
+  font-family:"DM Mono",monospace;
+  font-size:10px;
+  color:#606067;
+  letter-spacing:.14em;
+}
+
+.section-title{
+  font-size:clamp(38px,6vw,76px);
+  line-height:.95;
+  letter-spacing:-.055em;
+  max-width:800px;
+}
+
+.section-description{
+  max-width:320px;
+  color:#85858c;
+  font-size:13px;
+  line-height:1.75;
+}
+
+/* INTRO */
+
+.intro{
+  padding-top:60px;
+  padding-bottom:170px;
+}
+
+.intro-text{
+  max-width:1020px;
+  font-size:clamp(34px,5.5vw,76px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+}
+
+.intro-text span{
+  color:#55555b;
+}
+
+/* PROJECTS */
+
+.projects{
+  border-top:1px solid var(--line);
+}
+
+.project-list{
+  display:grid;
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:30px;
+  overflow:hidden;
+}
+
+.project{
+  position:relative;
+  background:var(--bg-soft);
+  min-height:470px;
+  padding:38px;
+  display:grid;
+  grid-template-columns:38% 62%;
+  gap:30px;
+  overflow:hidden;
+}
+
+.project-info{
+  position:relative;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.project-meta{
+  font-family:"DM Mono",monospace;
+  color:#626269;
+  font-size:9px;
+  letter-spacing:.13em;
+}
+
+.project h3{
+  margin-top:18px;
+  font-size:clamp(30px,4vw,52px);
+  letter-spacing:-.05em;
+  font-weight:600;
+}
+
+.project p{
+  margin-top:15px;
+  max-width:350px;
+  color:#85858b;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.project-link{
+  margin-top:30px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#bbb;
+  font-size:11px;
+}
+
+.project-link span{
+  transition:.3s ease;
+}
+
+.project:hover .project-link span{
+  transform:translateX(5px);
+}
+
+/* PROJECT VISUALS */
+
+.project-visual{
+  position:relative;
+  min-height:380px;
+  border-radius:24px;
+  overflow:hidden;
+  background:#08090b;
+  border:1px solid rgba(255,255,255,.07);
+  transition:transform .8s cubic-bezier(.22,1,.36,1);
+}
+
+.project:hover .project-visual{
+  transform:scale(.985);
+}
+
+/* climatesense */
+
+.climate{
+  background:
+    radial-gradient(circle at 50% 50%,rgba(80,140,255,.12),transparent 40%),
+    #08090c;
+}
+
+.climate-orbit{
+  position:absolute;
+  width:240px;
+  height:240px;
+  border:1px solid rgba(111,157,255,.18);
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 18s linear infinite;
+}
+
+.climate-orbit::before,
+.climate-orbit::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(111,157,255,.1);
+}
+
+.climate-orbit::before{
+  inset:30px;
+}
+
+.climate-orbit::after{
+  inset:-35px;
+}
+
+.climate-wave{
+  position:absolute;
+  width:150%;
+  height:100px;
+  left:-25%;
+  top:50%;
+  border-top:1px solid rgba(110,168,255,.65);
+  border-radius:50%;
+  transform:rotate(-8deg);
+  animation:wave 4s ease-in-out infinite;
+}
+
+.climate-wave.w2{
+  top:54%;
+  opacity:.35;
+  animation-delay:-1.5s;
+}
+
+@keyframes wave{
+  0%,100%{transform:translateY(8px) rotate(-8deg) scaleX(.96)}
+  50%{transform:translateY(-8px) rotate(-8deg) scaleX(1)}
+}
+
+.visual-label{
+  position:absolute;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  letter-spacing:.12em;
+  color:#666b78;
+}
+
+.label-top{
+  top:20px;
+  left:22px;
+}
+
+.label-bottom{
+  bottom:20px;
+  right:22px;
+}
+
+/* STUDENT CONNECT */
+
+.network{
+  background:
+    radial-gradient(circle at 50% 50%,rgba(155,140,255,.11),transparent 43%),
+    #09090c;
+}
+
+.network-lines{
+  position:absolute;
+  inset:0;
+}
+
+.network-line{
+  position:absolute;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(155,140,255,.35),transparent);
+  transform-origin:left center;
+}
+
+.nline1{width:70%;left:12%;top:32%;transform:rotate(18deg)}
+.nline2{width:65%;left:22%;top:65%;transform:rotate(-22deg)}
+.nline3{width:55%;left:25%;top:45%;transform:rotate(52deg)}
+.nline4{width:52%;left:37%;top:52%;transform:rotate(-58deg)}
+
+.network-node{
+  position:absolute;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#b0a5ff;
+  box-shadow:0 0 22px rgba(155,140,255,.6);
+  animation:nodePulse 3s ease-in-out infinite;
+}
+
+.node1{left:18%;top:30%}
+.node2{left:47%;top:48%;animation-delay:-1s}
+.node3{right:17%;top:26%;animation-delay:-2s}
+.node4{right:24%;bottom:22%;animation-delay:-.5s}
+.node5{left:29%;bottom:19%;animation-delay:-1.5s}
+
+@keyframes nodePulse{
+  0%,100%{transform:scale(.8);opacity:.55}
+  50%{transform:scale(1.25);opacity:1}
+}
+
+.network-card{
+  position:absolute;
+  width:145px;
+  height:80px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:15px;
+  background:rgba(255,255,255,.025);
+  backdrop-filter:blur(12px);
+}
+
+.nc1{left:13%;bottom:25%}
+.nc2{right:11%;top:35%}
+
+/* AI */
+
+.ai-field{
+  background:
+    radial-gradient(circle at 50% 50%,rgba(103,93,255,.16),transparent 43%),
+    #08080b;
+}
+
+.ai-core{
+  position:absolute;
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(155,140,255,.45);
+  box-shadow:
+    0 0 70px rgba(107,92,255,.18),
+    inset 0 0 35px rgba(107,92,255,.1);
+}
+
+.ai-core::before{
+  content:"";
+  position:absolute;
+  inset:23px;
+  border-radius:50%;
+  background:radial-gradient(circle,#d8d2ff,#7167c9 45%,#16152c);
+}
+
+.ai-node{
+  position:absolute;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#bdb5ff;
+  box-shadow:0 0 18px rgba(189,181,255,.8);
+}
+
+.ai-node::after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:1px;
+  background:linear-gradient(90deg,rgba(189,181,255,.4),transparent);
+  left:4px;
+  top:3px;
+  transform-origin:left;
+}
+
+.ai1{left:16%;top:25%}
+.ai1::after{transform:rotate(22deg)}
+
+.ai2{right:17%;top:22%}
+.ai2::after{transform:rotate(158deg)}
+
+.ai3{left:20%;bottom:23%}
+.ai3::after{transform:rotate(-24deg)}
+
+.ai4{right:14%;bottom:25%}
+.ai4::after{transform:rotate(205deg)}
+
+.ai-label{
+  position:absolute;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  color:#65616f;
+  letter-spacing:.12em;
+}
+
+/* ROBOTICS */
+
+.robotics{
+  background:
+    radial-gradient(circle at 50% 55%,rgba(255,255,255,.06),transparent 40%),
+    #090909;
+}
+
+.robot-arm{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:240px;
+  height:220px;
+  transform:translate(-50%,-50%);
+}
+
+.joint{
+  position:absolute;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.2);
+  background:radial-gradient(circle at 35% 30%,#5d5d64,#151518 58%,#070707);
+  box-shadow:0 0 30px rgba(255,255,255,.05);
+  z-index:2;
+}
+
+.j1{left:15px;bottom:20px}
+.j2{left:91px;top:75px}
+.j3{right:8px;top:18px}
+
+.arm{
+  position:absolute;
+  height:22px;
+  border-radius:20px;
+  background:linear-gradient(90deg,#222226,#77777d,#202024);
+  border:1px solid rgba(255,255,255,.14);
+  transform-origin:left center;
+}
+
+.arm1{
+  width:105px;
+  left:53px;
+  bottom:48px;
+  transform:rotate(-43deg);
+}
+
+.arm2{
+  width:95px;
+  left:126px;
+  top:92px;
+  transform:rotate(-44deg);
+}
+
+.gripper{
+  position:absolute;
+  right:-10px;
+  top:8px;
+  width:45px;
+  height:34px;
+  border-right:2px solid #8a8a90;
+  border-bottom:2px solid #8a8a90;
+  transform:rotate(-35deg);
+}
+
+.telemetry{
+  position:absolute;
+  right:25px;
+  bottom:24px;
+  font-family:"DM Mono",monospace;
+  font-size:8px;
+  line-height:2;
+  color:#666;
+  text-align:right;
+}
+
+/* ABOUT */
+
+.about{
+  border-top:1px solid var(--line);
+}
+
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:100px;
+}
+
+.about-big{
+  font-size:clamp(32px,4vw,54px);
+  letter-spacing:-.05em;
+  line-height:1.05;
+}
+
+.about-copy{
+  color:#85858b;
+  line-height:1.8;
+  font-size:14px;
+}
+
+.about-copy p+p{
+  margin-top:22px;
+}
+
+/* TOOLKIT */
+
+.toolkit-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:24px;
+  overflow:hidden;
+}
+
+.tool{
+  min-height:130px;
+  padding:22px;
+  background:var(--bg-soft);
+  transition:.35s ease;
+}
+
+.tool:hover{
+  background:#101012;
+}
+
+.tool-index{
+  font-family:"DM Mono",monospace;
+  color:#55555b;
+  font-size:9px;
+}
+
+.tool-name{
+  margin-top:35px;
+  font-size:14px;
+}
+
+/* ACHIEVEMENTS */
+
+.achievements{
+  border-top:1px solid var(--line);
+}
+
+.achievement-list{
+  border-top:1px solid var(--line);
+}
+
+.achievement{
+  display:grid;
+  grid-template-columns:100px 1fr auto;
+  align-items:center;
+  gap:30px;
+  padding:28px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.achievement-year{
+  font-family:"DM Mono",monospace;
+  font-size:10px;
+  color:#65656c;
+}
+
+.achievement-title{
+  font-size:18px;
+}
+
+.achievement-org{
+  margin-top:6px;
+  color:#77777d;
+  font-size:12px;
+}
+
+.achievement-place{
+  font-family:"DM Mono",monospace;
+  font-size:10px;
+  color:#85858b;
+}
+
+/* CONTACT */
+
+.contact{
+  min-height:80vh;
+  display:flex;
+  align-items:center;
+  border-top:1px solid var(--line);
+  overflow:hidden;
+}
+
+.contact-glow{
+  position:absolute;
+  width:600px;
+  height:600px;
+  right:-180px;
+  top:50%;
+  transform:translateY(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(85,113,255,.1),transparent 65%);
+  filter:blur(30px);
+}
+
+.contact-content{
+  position:relative;
+  z-index:2;
+}
+
+.contact-title{
+  max-width:900px;
+  font-size:clamp(55px,10vw,130px);
+  line-height:.88;
+  letter-spacing:-.075em;
+}
+
+.contact-title span{
+  color:#66666c;
+}
+
+.contact-email{
+  display:inline-flex;
+  margin-top:45px;
+  font-family:"DM Mono",monospace;
+  font-size:12px;
+  color:#aaa;
+  padding-bottom:8px;
+  border-bottom:1px solid #555;
+  transition:.3s ease;
+}
+
+.contact-email:hover{
+  color:#fff;
+  border-color:#fff;
+}
+
+/* FOOTER */
+
+footer{
+  padding:25px 0 35px;
+  border-top:1px solid var(--line);
+}
+
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  color:#55555b;
+  font-family:"DM Mono",monospace;
+  font-size:9px;
+  letter-spacing:.08em;
+}
+
+/* REVEAL */
+
+.reveal{
+  opacity:0;
+  transform:translateY(35px);
+  transition:
+    opacity 1s cubic-bezier(.22,1,.36,1),
+    transform 1s cubic-bezier(.22,1,.36,1);
+}
+
+.reveal.visible{
+  opacity:1;
+  transform:none;
+}
+
+/* CURSOR */
+
+.cursor{
+  position:fixed;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#fff;
+  pointer-events:none;
+  z-index:1000;
+  mix-blend-mode:difference;
+  transform:translate(-50%,-50%);
+  transition:
+    width .25s ease,
+    height .25s ease,
+    opacity .25s ease;
+}
+
+.cursor.big{
+  width:42px;
+  height:42px;
+  opacity:.6;
+}
+
+@media(pointer:coarse){
+  .cursor{
+    display:none;
+  }
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .container{
+    width:min(calc(100% - 28px),var(--max));
+  }
+
+  .nav-links{
+    display:none;
+  }
+
+  .nav-status{
+    font-size:8px;
+  }
+
+  .hero{
+    min-height:125svh;
+  }
+
+  .hero-content{
+    align-self:flex-start;
+    margin-top:22vh;
+  }
+
+  .hero-title{
+    font-size:clamp(52px,15vw,90px);
+  }
+
+  .hero-sub{
+    max-width:340px;
+    font-size:13px;
+  }
+
+  .hero-core{
+    width:360px;
+    height:360px;
+    min-width:0;
+    min-height:0;
+    right:-95px;
+    top:65%;
+    opacity:.72;
+  }
+
+  .hero-glow{
+    width:500px;
+    height:500px;
+  }
+
+  .section{
+    padding:100px 0;
+  }
+
+  .section-head{
+    display:block;
+    margin-bottom:45px;
+  }
+
+  .section-description{
+    margin-top:22px;
+  }
+
+  .intro{
+    padding-top:30px;
+    padding-bottom:110px;
+  }
+
+  .intro-text{
+    font-size:34px;
+  }
+
+  .project{
+    display:block;
+    min-height:auto;
+    padding:22px;
+  }
+
+  .project-info{
+    min-height:270px;
+  }
+
+  .project-visual{
+    min-height:340px;
+  }
+
+  .about-grid{
+    grid-template-columns:1fr;
+    gap:45px;
+  }
+
+  .toolkit-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .tool{
+    min-height:105px;
+  }
+
+  .tool-name{
+    margin-top:22px;
+  }
+
+  .achievement{
+    grid-template-columns:60px 1fr;
+    gap:15px;
+  }
+
+  .achievement-place{
+    grid-column:2;
+  }
+
+  .contact{
+    min-height:70vh;
+  }
+
+  .contact-title{
+    font-size:clamp(54px,15vw,90px);
+  }
+
+  .footer-inner{
+    gap:20px;
+    flex-direction:column;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.001ms!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader">
+  <div class="loader-inner">
+    <div class="loader-mark">KELVIN // DIGITAL LAB</div>
+    <div class="loader-line">
+      <div class="loader-progress"></div>
+    </div>
+  </div>
+</div>
+
+<div class="cursor"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo">KELVIN // DIGITAL LAB</a>
+
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      BUILD MODE
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-sticky">
+
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+
+    <div class="hero-core">
+      <div class="core-aura"></div>
+      <div class="core-ring"></div>
+      <div class="core-ring r2"></div>
+      <div class="core-ring r3"></div>
+      <div class="core"></div>
+      <div class="core-label">DIGITAL SYSTEM / 001</div>
+    </div>
+
+    <div class="hero-content">
+      <div class="eyebrow">
+        WEB · AI · ROBOTICS · TECHNOLOGY
+      </div>
+
+      <h1 class="hero-title">
+        <span>KELVIN</span>
+        <span>BUILDS</span>
+        <span class="dim">SYSTEMS.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Exploring technology through software, artificial intelligence,
+        robotics and creative digital projects.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn primary magnetic" href="#work">
+          Explore work
+        </a>
+
+        <a class="btn secondary magnetic" href="#about">
+          About me
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      SCROLL
+      <span class="scroll-line"></span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- INTRO -->
+
+<section class="section intro">
+  <div class="container">
+    <p class="intro-text reveal">
+      Technology becomes interesting
+      <span>when it solves something real.</span>
+    </p>
+  </div>
+</section>
+
+
+<!-- WORK -->
+
+<section class="section projects" id="work">
+
+  <div class="container">
+
+    <div class="section-head reveal">
+      <div class="section-number">01 / SELECTED WORK</div>
+
+      <p class="section-description">
+        A collection of projects exploring software,
+        artificial intelligence, robotics and technology.
+      </p>
+    </div>
+
+    <div class="project-list">
+
+      <!-- CLIMASENSE -->
+
+      <article class="project reveal">
+
+        <div class="project-info">
+          <div>
+            <div class="project-meta">PROJECT 001 · ENVIRONMENTAL TECHNOLOGY</div>
+
+            <h3>ClimaSense</h3>
+
+            <p>
+              A monitoring concept exploring how environmental
+              data can be visualized and turned into useful signals.
+            </p>
+          </div>
+
+          <a class="project-link" href="#contact">
+            Explore concept <span>↗</span>
+          </a>
+        </div>
+
+        <div class="project-visual climate">
+
+          <div class="visual-label label-top">
+            ENVIRONMENTAL SIGNAL
+          </div>
+
+          <div class="climate-orbit"></div>
+
+          <div class="climate-wave"></div>
+          <div class="climate-wave w2"></div>
+
+          <div class="visual-label label-bottom">
+            CLIMASENSE / SYSTEM
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- STUDENT CONNECT -->
+
+      <article class="project reveal">
+
+        <div class="project-info">
+          <div>
+            <div class="project-meta">PROJECT 002 · WEB PLATFORM</div>
+
+            <h3>Student Connect</h3>
+
+            <p>
+              A web platform concept focused on connecting
+              students, information and digital experiences.
+            </p>
+          </div>
+
+          <a class="project-link" href="#contact">
+            Explore concept <span>↗</span>
+          </a>
+        </div>
+
+        <div class="project-visual network">
+
+          <div class="network-lines">
+            <span class="network-line nline1"></span>
+            <span class="network-line nline2"></span>
+            <span class="network-line nline3"></span>
+            <span class="network-line nline4"></span>
+          </div>
+
+          <span class="network-node node1"></span>
+          <span class="network-node node2"></span>
+          <span class="network-node node3"></span>
+          <span class="network-node node4"></span>
+          <span class="network-node node5"></span>
+
+          <div class="network-card nc1"></div>
+          <div class="network-card nc2"></div>
+
+          <div class="visual-label label-top">
+            CONNECTION / NETWORK
+          </div>
+
+          <div class="visual-label label-bottom">
+            STUDENT CONNECT
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- AI FOR GOOD -->
+
+      <article class="project reveal">
+
+        <div class="project-info">
+          <div>
+            <div class="project-meta">PROJECT 003 · ARTIFICIAL INTELLIGENCE</div>
+
+            <h3>AI for Good</h3>
+
+            <p>
+              Exploring artificial intelligence as a tool for
+              solving meaningful problems and creating positive impact.
+            </p>
+          </div>
+
+          <a class="project-link" href="#contact">
+            Explore concept <span>↗</span>
+          </a>
+        </div>
+
+        <div class="project-visual ai-field">
+
+          <div class="ai-core"></div>
+
+          <span class="ai-node ai1"></span>
+          <span class="ai-node ai2"></span>
+          <span class="ai-node ai3"></span>
+          <span class="ai-node ai4"></span>
+
+          <div class="ai-label" style="left:20px;top:22px;">
+            INPUT
+          </div>
+
+          <div class="ai-label" style="right:20px;bottom:22px;">
+            PROCESS / OUTPUT
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- ROBOTICS -->
+
+      <article class="project reveal">
+
+        <div class="project-info">
+          <div>
+            <div class="project-meta">PROJECT 004 · ROBOTICS</div>
+
+            <h3>Robotics</h3>
+
+            <p>
+              Hands-on exploration of robotics, engineering,
+              problem solving and building systems that interact
+              with the physical world.
+            </p>
+          </div>
+
+          <a class="project-link" href="#contact">
+            Explore work <span>↗</span>
+          </a>
+        </div>
+
+        <div class="project-visual robotics">
+
+          <div class="robot-arm">
+            <div class="arm arm1"></div>
+            <div class="arm arm2"></div>
+
+            <div class="joint j1"></div>
+            <div class="joint j2"></div>
+            <div class="joint j3"></div>
+
+            <div class="gripper"></div>
+          </div>
+
+          <div class="telemetry">
+            ROBOTICS SYSTEM<br>
+            MECHANICAL / DIGITAL<br>
+            MY REDEEMER
+          </div>
+
+          <div class="visual-label label-top">
+            PHYSICAL SYSTEM
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ABOUT -->
+
+<section class="section about" id="about">
+
+  <div class="container">
+
+    <div class="section-head reveal">
+      <div class="section-number">02 / ABOUT</div>
+    </div>
+
+    <div class="about-grid">
+
+      <h2 class="about-big reveal">
+        Curious by nature.
+        <br>
+        Builder by choice.
+      </h2>
+
+      <div class="about-copy reveal">
+
+        <p>
+          I'm Kelvin — a developer exploring the intersection
+          of software, artificial intelligence, robotics and
+          creative technology.
+        </p>
+
+        <p>
+          I enjoy turning ideas into working digital experiences,
+          experimenting with new technologies and learning
+          through building.
+        </p>
+
+        <p>
+          My goal is simple: keep learning, keep building,
+          and create technology that actually matters.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- TOOLKIT -->
+
+<section class="section" id="toolkit">
+
+  <div class="container">
+
+    <div class="section-head reveal">
+
+      <div class="section-number">03 / TOOLKIT</div>
+
+      <h2 class="section-title">
+        Tools I use
+        <br>
+        to build.
+      </h2>
+
+    </div>
+
+    <div class="toolkit-grid">
+
+      <div class="tool reveal">
+        <div class="tool-index">01</div>
+        <div class="tool-name">HTML</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">02</div>
+        <div class="tool-name">CSS</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">03</div>
+        <div class="tool-name">JavaScript</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">04</div>
+        <div class="tool-name">React</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">05</div>
+        <div class="tool-name">Python</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">06</div>
+        <div class="tool-name">C++</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">07</div>
+        <div class="tool-name">AI</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">08</div>
+        <div class="tool-name">Robotics</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">09</div>
+        <div class="tool-name">Git</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">10</div>
+        <div class="tool-name">GitHub</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">11</div>
+        <div class="tool-name">Node.js</div>
+      </div>
+
+      <div class="tool reveal">
+        <div class="tool-index">12</div>
+        <div class="tool-name">Vite</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ACHIEVEMENTS -->
+
+<section class="section achievements">
+
+  <div class="container">
+
+    <div class="section-head reveal">
+      <div class="section-number">04 / ACHIEVEMENTS</div>
+
+      <p class="section-description">
+        Milestones from robotics and technology competitions.
+      </p>
+    </div>
+
+    <div class="achievement-list">
+
+      <div class="achievement reveal">
+        <div class="achievement-year">2024</div>
+
+        <div>
+          <div class="achievement-title">
+            FLL Masterpiece
+          </div>
+
+          <div class="achievement-org">
+            My Redeemer Robotics Team
+          </div>
+        </div>
+
+        <div class="achievement-place">
+          1ST PLACE
+        </div>
+      </div>
+
+
+      <div class="achievement reveal">
+        <div class="achievement-year">2025</div>
+
+        <div>
+          <div class="achievement-title">
+            AI for Good
+          </div>
+
+          <div class="achievement-org">
+            Ghana Nationals · Global Summit
+          </div>
+        </div>
+
+        <div class="achievement-place">
+          1ST · 3RD WORLDWIDE
+        </div>
+      </div>
+
+
+      <div class="achievement reveal">
+        <div class="achievement-year">2025</div>
+
+        <div>
+          <div class="achievement-title">
+            RoboFest Nationals
+          </div>
+
+          <div class="achievement-org">
+            My Redeemer Robotics Team
+          </div>
+        </div>
+
+        <div class="achievement-place">
+          3RD PLACE
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section class="contact" id="contact">
+
+  <div class="contact-glow"></div>
+
+  <div class="container">
+
+    <div class="contact-content reveal">
+
+      <div class="section-number">
+        05 / CONTACT
+      </div>
+
+      <h2 class="contact-title">
+        Have an idea?
+        <br>
+        <span>Let's build it.</span>
+      </h2>
+
+      <a
+        class="contact-email"
+        href="mailto:kelvinbanor5@gmail.com"
+      >
+        kelvinbanor5@gmail.com
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+  <div class="container">
+
+    <div class="footer-inner">
+
+      <span>
+        © 2025 KELVIN // DIGITAL LAB
+      </span>
+
+      <span>
+        WEB · AI · ROBOTICS · TECHNOLOGY
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script>
+
+/* LOADER */
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.querySelector(".loader").classList.add("hide");
+  }, 1100);
+});
+
+
+/* NAV */
+
+const nav = document.querySelector(".nav");
+
+window.addEventListener("scroll", () => {
+  nav.classList.toggle("scrolled", window.scrollY > 40);
+}, {passive:true});
+
+
+/* HERO MOTION */
+
+const hero = document.querySelector(".hero");
+const heroCore = document.querySelector(".hero-core");
+const heroContent = document.querySelector(".hero-content");
+
+let target = 0;
+let current = 0;
+let raf = false;
+
+function updateHeroTarget(){
+
+  const rect = hero.getBoundingClientRect();
+
+  const distance = hero.offsetHeight - window.innerHeight;
+
+  target = distance > 0
+    ? -rect.top / distance
+    : 0;
+
+  target = Math.max(0,Math.min(1,target));
+
+}
+
+function animateHero(){
+
+  current += (target-current) * .075;
+
+  const coreScale = 1 + current * .42;
+  const coreX = current * -12;
+  const coreY = current * -8;
+  const coreRotate = current * 12;
+
+  heroCore.style.transform =
+    `translate3d(${coreX}%,${coreY}%,0)
+     translateY(-50%)
+     scale(${coreScale})
+     rotate(${coreRotate}deg)`;
+
+  heroCore.style.opacity = 1 - current * .3;
+
+  const textY = current * -42;
+  const textScale = 1 - current * .035;
+  const textOpacity = 1 - current * .7;
+
+  heroContent.style.transform =
+    `translate3d(0,${textY}px,0)
+     scale(${textScale})`;
+
+  heroContent.style.opacity = textOpacity;
+
+  if(Math.abs(target-current) > .0005){
+    requestAnimationFrame(animateHero);
+  }else{
+    current = target;
+  }
+
+  raf = false;
+}
+
+window.addEventListener("scroll", () => {
+
+  updateHeroTarget();
+
+  if(!raf){
+    raf = true;
+    requestAnimationFrame(animateHero);
+  }
+
+}, {passive:true});
+
+updateHeroTarget();
+animateHero();
+
+
+/* REVEAL */
+
+const observer = new IntersectionObserver(
+  entries => {
+
+    entries.forEach(entry => {
+
+      if(entry.isIntersecting){
+
+        entry.target.classList.add("visible");
+
+        observer.unobserve(entry.target);
+
+      }
+
+    });
+
+  },
+  {
+    threshold:.12,
+    rootMargin:"0px 0px -40px 0px"
+  }
+);
+
+document.querySelectorAll(".reveal")
+  .forEach(el => observer.observe(el));
+
+
+/* CURSOR */
+
+const cursor = document.querySelector(".cursor");
+
+if(window.matchMedia("(pointer:fine)").matches){
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorX = 0;
+  let cursorY = 0;
+
+  window.addEventListener("mousemove", e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function moveCursor(){
+
+    cursorX += (mouseX-cursorX)*.18;
+    cursorY += (mouseY-cursorY)*.18;
+
+    cursor.style.left = cursorX + "px";
+    cursor.style.top = cursorY + "px";
+
+    requestAnimationFrame(moveCursor);
+  }
+
+  moveCursor();
+
+  document.querySelectorAll("a,.magnetic").forEach(el => {
+
+    el.addEventListener("mouseenter", () => {
+      cursor.classList.add("big");
+    });
+
+    el.addEventListener("mouseleave", () => {
+      cursor.classList.remove("big");
+    });
+
+  });
+
+}
+
+
+/* MAGNETIC BUTTONS */
+
+document.querySelectorAll(".magnetic").forEach(button => {
+
+  button.addEventListener("mousemove", e => {
+
+    const rect = button.getBoundingClientRect();
+
+    const x = e.clientX - rect.left - rect.width/2;
+    const y = e.clientY - rect.top - rect.height/2;
+
+    button.style.transform =
+      `translate(${x*.12}px,${y*.12}px)`;
+
+  });
+
+  button.addEventListener("mouseleave", () => {
+
+    button.style.transform = "";
+
+  });
+
+});
+
+
+/* PROJECT DEPTH */
+
+document.querySelectorAll(".project").forEach(project => {
+
+  const visual = project.querySelector(".project-visual");
+
+  project.addEventListener("mousemove", e => {
+
+    if(window.innerWidth < 800) return;
+
+    const rect = project.getBoundingClientRect();
+
+    const x = (e.clientX - rect.left) / rect.width - .5;
+    const y = (e.clientY - rect.top) / rect.height - .5;
+
+    visual.style.transform =
+      `perspective(1000px)
+       rotateX(${y*-2}deg)
+       rotateY(${x*2}deg)
+       scale(.985)`;
+
+  });
+
+  project.addEventListener("mouseleave", () => {
+
+    visual.style.transform = "";
+
+  });
+
+});
+
+
+/* SMOOTH ANCHORS */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+  link.addEventListener("click", e => {
+
+    const target = document.querySelector(
+      link.getAttribute("href")
+    );
+
+    if(target){
+
+      e.preventDefault();
+
+      target.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+    }
+
+  });
+
+});
+
+</script>
+
+</body>
+</html>
