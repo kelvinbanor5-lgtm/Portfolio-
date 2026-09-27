@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KELVIN // DIGITAL LAB</title>
+
+<meta
+  name="description"
+  content="Kelvin — software, artificial intelligence, robotics and technology."
+>
+
+<style>
+:root {
+  --black: #050506;
+  --black-2: #0a0a0c;
+  --white: #f5f5f7;
+  --muted: #86868b;
+  --blue: #6ea8ff;
+  --violet: #9b7cff;
+  --line: rgba(255,255,255,.1);
+  --glass: rgba(255,255,255,.055);
+  --max: 1400px;
+  --pad: clamp(20px, 5vw, 70px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: white;
+  color: black;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -5;
+  background:
+    radial-gradient(
+      circle at 75% 15%,
+      rgba(90,120,255,.12),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 15% 80%,
+      rgba(120,70,255,.07),
+      transparent 30%
+    );
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: .025;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.page {
+  width: min(100%, var(--max));
+  margin: auto;
+  padding: 0 var(--pad);
+}
+
+.nav {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: var(--pad);
+  right: var(--pad);
+  z-index: 50;
+}
+
+.logo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.logo span {
+  color: #777;
+  font-weight: 400;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.nav-links a {
+  transition: color .3s ease;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  height: 190vh;
+  position: relative;
+}
+
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 650px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  width: 100%;
+  position: relative;
+  z-index: 5;
+}
+
+.hero-label {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  transition: opacity .5s ease;
+}
+
+.hero-title {
+  font-size: clamp(72px, 13vw, 190px);
+  line-height: .82;
+  letter-spacing: -.085em;
+  font-weight: 700;
+  max-width: 1100px;
+  position: relative;
+  z-index: 5;
+}
+
+.hero-title .soft {
+  color: #74747a;
+}
+
+.hero-title .accent {
+  color: var(--blue);
+  font-weight: 500;
+}
+
+.hero-description {
+  margin-top: 48px;
+  width: min(390px, 100%);
+  color: #999;
+  line-height: 1.7;
+  font-size: 15px;
+  transition: opacity .4s ease;
+}
+
+.hero-orbit {
+  position: absolute;
+  width: min(48vw, 680px);
+  height: min(48vw, 680px);
+  right: 1%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  transition:
+    transform .1s linear,
+    opacity .4s ease;
+}
+
+.core {
+  position: absolute;
+  width: 38%;
+  height: 38%;
+  left: 31%;
+  top: 31%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      #ffffff,
+      #9dbbff 10%,
+      #596eff 28%,
+      #312c8d 55%,
+      #09091d 75%
+    );
+  box-shadow:
+    0 0 50px rgba(90,120,255,.4),
+    0 0 150px rgba(85,70,255,.2);
+  animation: corePulse 5s ease-in-out infinite;
+}
+
+@keyframes corePulse {
+  0%,100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.07);
+  }
+}
+
+.ring {
+  position: absolute;
+  inset: 15%;
+  border: 1px solid rgba(150,170,255,.25);
+  border-radius: 50%;
+  transform: rotateX(65deg) rotateZ(20deg);
+  animation: spin 16s linear infinite;
+}
+
+.ring:nth-child(2) {
+  inset: 5%;
+  transform: rotateX(65deg) rotateZ(-35deg);
+  animation-duration: 21s;
+}
+
+.ring:nth-child(3) {
+  inset: 25%;
+  transform: rotateX(70deg) rotateZ(65deg);
+  animation-duration: 13s;
+}
+
+@keyframes spin {
+  to {
+    transform:
+      rotateX(65deg)
+      rotateZ(380deg);
+  }
+}
+
+.core-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b7caff;
+  box-shadow: 0 0 18px #7193ff;
+}
+
+.p1 {
+  top: 15%;
+  left: 62%;
+}
+
+.p2 {
+  top: 73%;
+  left: 20%;
+}
+
+.p3 {
+  top: 38%;
+  right: 5%;
+}
+
+/* hero bottom UI */
+
+.hero-bottom {
+  position: absolute;
+  bottom: 35px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  color: #777;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+}
+
+.scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scroll-line {
+  width: 55px;
+  height: 1px;
+  background: #555;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+section {
+  padding: 150px 0;
+}
+
+.eyebrow {
+  color: #777;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(55px, 9vw, 125px);
+  letter-spacing: -.075em;
+  line-height: .85;
+  margin-top: 25px;
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.intro {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+}
+
+.intro-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.5fr .7fr;
+  gap: 80px;
+}
+
+.intro-statement {
+  font-size: clamp(38px, 6vw, 82px);
+  line-height: 1;
+  letter-spacing: -.06em;
+}
+
+.intro-statement span {
+  color: #696970;
+}
+
+.intro-side {
+  align-self: end;
+  color: #888;
+  line-height: 1.8;
+  font-size: 14px;
+  max-width: 340px;
+}
+
+/* =========================================================
+   WORK
+========================================================= */
+
+.work {
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(255,255,255,.015),
+      transparent
+    );
+}
+
+.work-header {
+  margin-bottom: 70px;
+}
+
+.work-list {
+  border-top: 1px solid var(--line);
+}
+
+.work-item {
+  min-height: 180px;
+  display: grid;
+  grid-template-columns: 70px 1.2fr 1fr 60px;
+  gap: 30px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  transition: padding .5s ease;
+}
+
+.work-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(100,130,255,.12),
+      transparent 45%
+    );
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+.work-item:hover::before {
+  opacity: 1;
+}
+
+.work-item:hover {
+  padding-left: 15px;
+}
+
+.work-number {
+  color: #555;
+  font-size: 11px;
+  position: relative;
+}
+
+.work-name {
+  font-size: clamp(28px, 4vw, 55px);
+  letter-spacing: -.05em;
+  position: relative;
+}
+
+.work-description {
+  color: #777;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 350px;
+  position: relative;
+}
+
+.work-arrow {
+  font-size: 25px;
+  color: #666;
+  position: relative;
+  transition:
+    transform .4s ease,
+    color .4s ease;
+}
+
+.work-item:hover .work-arrow {
+  color: white;
+  transform: translateX(7px);
+}
+
+/* =========================================================
+   FEATURED VISUAL
+========================================================= */
+
+.feature {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.feature-card {
+  width: 100%;
+  min-height: 650px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(
+      circle at 70% 40%,
+      rgba(105,130,255,.28),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 30% 70%,
+      rgba(145,80,255,.18),
+      transparent 30%
+    ),
+    #090a12;
+  border: 1px solid rgba(255,255,255,.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent,
+      rgba(120,150,255,.6),
+      transparent,
+      rgba(150,100,255,.5),
+      transparent
+    );
+  filter: blur(50px);
+  animation: featureSpin 15s linear infinite;
+}
+
+@keyframes featureSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.feature-core {
+  width: 230px;
+  height: 230px;
+  border-radius: 45%;
+  transform: rotate(25deg);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.8),
+      rgba(120,150,255,.2) 35%,
+      rgba(90,70,220,.15)
+    );
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.3);
+  box-shadow:
+    0 30px 100px rgba(50,70,255,.25);
+  animation: featureFloat 7s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes featureFloat {
+  0%,100% {
+    transform: rotate(25deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(18deg) translateY(-25px);
+  }
+}
+
+.feature-label {
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  color: #888;
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.feature-bottom {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  bottom: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.feature-title {
+  font-size: clamp(35px, 5vw, 70px);
+  letter-spacing: -.06em;
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+}
+
+.about-large {
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: -.06em;
+}
+
+.about-large span {
+  color: #707077;
+}
+
+.about-copy {
+  color: #888;
+  line-height: 1.9;
+  font-size: 15px;
+  align-self: end;
+  max-width: 430px;
+}
+
+/* =========================================================
+   TOOLKIT
+========================================================= */
+
+.toolkit-grid {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 80px;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tool {
+  padding: 13px 17px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11px;
+  color: #aaa;
+  background: rgba(255,255,255,.02);
+  transition:
+    background .3s ease,
+    color .3s ease,
+    transform .3s ease;
+}
+
+.tool:hover {
+  background: rgba(255,255,255,.08);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+.achievements {
+  border-top: 1px solid var(--line);
+}
+
+.achievement {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr;
+  gap: 30px;
+  padding: 35px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.achievement-year {
+  color: var(--blue);
+  font-size: 12px;
+}
+
+.achievement-title {
+  font-size: 20px;
+  letter-spacing: -.02em;
+}
+
+.achievement-detail {
+  color: #777;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.contact-inner {
+  width: 100%;
+}
+
+.contact-title {
+  font-size: clamp(65px, 13vw, 180px);
+  line-height: .8;
+  letter-spacing: -.09em;
+  margin-top: 30px;
+}
+
+.contact-title .muted {
+  color: #707077;
+}
+
+.contact-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 90px;
+  gap: 30px;
+}
+
+.email {
+  font-size: clamp(18px, 2.5vw, 28px);
+  letter-spacing: -.03em;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 21px;
+  border-radius: 100px;
+  background: white;
+  color: black;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(255,255,255,.15);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 30px 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #666;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 1s cubic-bezier(.2,.7,.2,1),
+    transform 1s cubic-bezier(.2,.7,.2,1);
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .nav-links {
+    display: none;
+  }
+
+  .hero {
+    height: 150vh;
+  }
+
+  .hero-sticky {
+    align-items: center;
+  }
+
+  .hero-orbit {
+    width: 75vw;
+    height: 75vw;
+    right: -25%;
+    top: 38%;
+    opacity: .45;
+  }
+
+  .hero-title {
+    font-size: clamp(68px, 18vw, 125px);
+  }
+
+  .hero-description {
+    margin-top: 35px;
+  }
+
+  .intro-grid,
+  .about-grid,
+  .toolkit-grid {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .work-item {
+    grid-template-columns: 40px 1fr 35px;
+    gap: 15px;
+    min-height: 145px;
+  }
+
+  .work-description {
+    grid-column: 2;
+    margin-top: -15px;
+  }
+
+  .work-arrow {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+
+  .feature-card {
+    min-height: 520px;
+    border-radius: 22px;
+  }
+
+  .achievement {
+    grid-template-columns: 70px 1fr;
+  }
+
+  .achievement-detail {
+    grid-column: 2;
+  }
+
+  .contact-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 500px) {
+
+  section {
+    padding: 100px 0;
+  }
+
+  .hero-bottom {
+    bottom: 20px;
+  }
+
+  .hero-label {
+    margin-bottom: 22px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .feature-core {
+    width: 150px;
+    height: 150px;
+  }
+
+  .feature-bottom {
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+  }
+
+  .feature-label {
+    left: 22px;
+    top: 22px;
+  }
+
+  .section-title {
+    font-size: 60px;
+  }
+
+  .contact-title {
+    font-size: 65px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- =====================================================
+       NAVIGATION
+  ====================================================== -->
+
+  <nav class="nav">
+
+    <a href="#" class="logo">
+      KELVIN <span>// DIGITAL LAB</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+  </nav>
+
+
+  <!-- =====================================================
+       HERO
+  ====================================================== -->
+
+  <section class="hero">
+
+    <div class="hero-sticky">
+
+      <div class="hero-orbit">
+
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+
+        <div class="core"></div>
+
+        <div class="core-particle p1"></div>
+        <div class="core-particle p2"></div>
+        <div class="core-particle p3"></div>
+
+      </div>
+
+
+      <div class="hero-content">
+
+        <div class="hero-label">
+          Software · AI · Robotics · Technology
+        </div>
+
+        <h1 class="hero-title">
+          KELVIN
+          <br>
+          <span class="soft">BUILDS</span>
+          <span class="accent">/</span>
+          <br>
+          SYSTEMS.
+        </h1>
+
+        <p class="hero-description">
+          Exploring technology through software,
+          artificial intelligence, robotics and
+          creative digital projects.
+        </p>
+
+      </div>
+
+
+      <div class="hero-bottom">
+
+        <div>
+          KL-001
+        </div>
+
+        <div class="scroll-indicator">
+          SCROLL
+          <span class="scroll-line"></span>
+        </div>
+
+        <div>
+          DIGITAL LAB
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       INTRO
+  ====================================================== -->
+
+  <section class="intro">
+
+    <div class="intro-grid">
+
+      <div class="intro-statement reveal">
+
+        Technology becomes
+        <span>interesting</span>
+        when it solves something
+        <span>real.</span>
+
+      </div>
+
+      <div class="intro-side reveal">
+
+        Curious by nature.
+        Builder by choice.
+
+        <br><br>
+
+        Focused on building digital experiences,
+        exploring artificial intelligence,
+        experimenting with robotics and learning
+        through creating.
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       WORK
+  ====================================================== -->
+
+  <section class="work" id="work">
+
+    <div class="work-header reveal">
+
+      <div class="eyebrow">
+        01 — Selected Work
+      </div>
+
+      <h2 class="section-title">
+        Built<br>
+        to solve.
+      </h2>
+
+    </div>
+
+
+    <div class="work-list">
+
+      <a href="#" class="work-item reveal">
+
+        <div class="work-number">01</div>
+
+        <div class="work-name">
+          ClimaSense
+        </div>
+
+        <div class="work-description">
+          Environmental technology focused on
+          monitoring and understanding changing
+          conditions.
+        </div>
+
+        <div class="work-arrow">
+          ↗
+        </div>
+
+      </a>
+
+
+      <a href="#" class="work-item reveal">
+
+        <div class="work-number">02</div>
+
+        <div class="work-name">
+          Student Connect
+        </div>
+
+        <div class="work-description">
+          A web platform designed around student
+          connection and digital interaction.
+        </div>
+
+        <div class="work-arrow">
+          ↗
+        </div>
+
+      </a>
+
+
+      <a href="#" class="work-item reveal">
+
+        <div class="work-number">03</div>
+
+        <div class="work-name">
+          AI for Good
+        </div>
+
+        <div class="work-description">
+          Artificial intelligence explored as a tool
+          for solving meaningful real-world problems.
+        </div>
+
+        <div class="work-arrow">
+          ↗
+        </div>
+
+      </a>
+
+
+      <a href="#" class="work-item reveal">
+
+        <div class="work-number">04</div>
+
+        <div class="work-name">
+          Robotics
+        </div>
+
+        <div class="work-description">
+          Engineering, automation and problem solving
+          through competitive robotics.
+        </div>
+
+        <div class="work-arrow">
+          ↗
+        </div>
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FEATURED VISUAL
+  ====================================================== -->
+
+  <section class="feature">
+
+    <div class="feature-card reveal">
+
+      <div class="feature-label">
+        KELVIN // SYSTEM 001
+      </div>
+
+      <div class="feature-core"></div>
+
+      <div class="feature-bottom">
+
+        <div>
+          <div class="eyebrow">
+            Digital laboratory
+          </div>
+
+          <div class="feature-title">
+            Ideas → Systems.
+          </div>
+        </div>
+
+        <div class="eyebrow">
+          Active
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ABOUT
+  ====================================================== -->
+
+  <section id="about">
+
+    <div class="about-grid">
+
+      <div class="reveal">
+
+        <div class="eyebrow">
+          02 — About
+        </div>
+
+        <div class="about-large" style="margin-top:35px;">
+
+          Curious by nature.
+          <span>
+            Builder by choice.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="about-copy reveal">
+
+        <p>
+          Focused on building digital experiences,
+          exploring artificial intelligence,
+          experimenting with robotics and learning
+          through creating.
+        </p>
+
+        <br>
+
+        <p>
+          The goal is simple:
+          keep learning, keep building and use
+          technology to turn ideas into something real.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       TOOLKIT
+  ====================================================== -->
+
+  <section id="toolkit">
+
+    <div class="toolkit-grid">
+
+      <div class="reveal">
+
+        <div class="eyebrow">
+          03 — Toolkit
+        </div>
+
+        <h2 class="section-title">
+          Tools<br>
+          for ideas.
+        </h2>
+
+      </div>
+
+
+      <div class="tools reveal">
+
+        <span class="tool">HTML</span>
+        <span class="tool">CSS</span>
+        <span class="tool">JavaScript</span>
+        <span class="tool">React</span>
+        <span class="tool">Python</span>
+        <span class="tool">C++</span>
+        <span class="tool">AI</span>
+        <span class="tool">Robotics</span>
+        <span class="tool">Git</span>
+        <span class="tool">GitHub</span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ACHIEVEMENTS
+  ====================================================== -->
+
+  <section>
+
+    <div class="reveal">
+
+      <div class="eyebrow">
+        04 — Recognition
+      </div>
+
+      <h2 class="section-title">
+        Milestones.
+      </h2>
+
+    </div>
+
+
+    <div class="achievements" style="margin-top:70px;">
+
+      <div class="achievement reveal">
+
+        <div class="achievement-year">
+          2024
+        </div>
+
+        <div class="achievement-title">
+          FLL Masterpiece
+        </div>
+
+        <div class="achievement-detail">
+          Maridema robotics team — 1st place.
+        </div>
+
+      </div>
+
+
+      <div class="achievement reveal">
+
+        <div class="achievement-year">
+          2025
+        </div>
+
+        <div class="achievement-title">
+          AI for Good
+        </div>
+
+        <div class="achievement-detail">
+          Ghana nationals — 1st place.
+          Global Summit — 3rd worldwide.
+        </div>
+
+      </div>
+
+
+      <div class="achievement reveal">
+
+        <div class="achievement-year">
+          2025
+        </div>
+
+        <div class="achievement-title">
+          RoboFest Nationals
+        </div>
+
+        <div class="achievement-detail">
+          Maridema robotics team — 3rd place.
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CONTACT
+  ====================================================== -->
+
+  <section class="contact" id="contact">
+
+    <div class="contact-inner">
+
+      <div class="eyebrow reveal">
+        05 — Contact
+      </div>
+
+      <h2 class="contact-title reveal">
+
+        HAVE AN
+        <br>
+
+        <span class="muted">
+          IDEA?
+        </span>
+
+        <br>
+
+        LET'S BUILD.
+
+      </h2>
+
+
+      <div class="contact-bottom reveal">
+
+        <a
+          href="mailto:kelvinbanor5@gmail.com"
+          class="email"
+        >
+          kelvinbanor5@gmail.com
+        </a>
+
+        <a
+          href="mailto:kelvinbanor5@gmail.com"
+          class="button"
+        >
+          Start a conversation
+          →
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer>
+
+    <div class="footer">
+
+      <div>
+        KELVIN // DIGITAL LAB
+      </div>
+
+      <div>
+        Software · AI · Robotics
+      </div>
+
+      <div>
+        © 2025
+      </div>
+
+    </div>
+
+  </footer>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   REVEAL ANIMATIONS
+========================================================= */
+
+const reveals = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver(
+  entries => {
+
+    entries.forEach(entry => {
+
+      if (entry.isIntersecting) {
+
+        entry.target.classList.add("show");
+
+        observer.unobserve(entry.target);
+
+      }
+
+    });
+
+  },
+  {
+    threshold: .12
+  }
+);
+
+reveals.forEach(element => {
+  observer.observe(element);
+});
+
+
+/* =========================================================
+   APPLE-STYLE HERO SCROLL TRANSFORMATION
+========================================================= */
+
+const hero = document.querySelector(".hero");
+const heroOrbit = document.querySelector(".hero-orbit");
+const heroContent = document.querySelector(".hero-content");
+
+function updateHero() {
+
+  const rect = hero.getBoundingClientRect();
+
+  const total = hero.offsetHeight - window.innerHeight;
+
+  let progress = -rect.top / total;
+
+  progress = Math.max(0, Math.min(1, progress));
+
+
+  /*
+    Visual gets larger and moves toward center
+    as the user scrolls through the hero.
+  */
+
+  const scale =
+    1 +
+    progress * 1.25;
+
+  const x =
+    progress * -25;
+
+  const y =
+    progress * -8;
+
+  heroOrbit.style.transform =
+    `translate(${x}%, ${y}%) translateY(-50%) scale(${scale})`;
+
+  heroOrbit.style.opacity =
+    1 - progress * .35;
+
+
+  /*
+    Text slowly moves away,
+    creating the cinematic transition.
+  */
+
+  heroContent.style.transform =
+    `translateY(${progress * -55}px)`;
+
+  heroContent.style.opacity =
+    1 - progress * .7;
+
+}
+
+window.addEventListener(
+  "scroll",
+  updateHero,
+  { passive: true }
+);
+
+updateHero();
+
+
+/* =========================================================
+   CURSOR MICRO-INTERACTION
+========================================================= */
+
+if (
+  window.matchMedia("(pointer:fine)").matches
+) {
+
+  const button =
+    document.querySelector(".button");
+
+  window.addEventListener("mousemove", event => {
+
+    const x =
+      (event.clientX / window.innerWidth - .5);
+
+    const y =
+      (event.clientY / window.innerHeight - .5);
+
+    const core =
+      document.querySelector(".feature-core");
+
+    if (core) {
+
+      core.style.marginLeft =
+        `${x * 12}px`;
+
+      core.style.marginTop =
+        `${y * 12}px`;
+
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   SMOOTH ANCHOR OFFSET
+========================================================= */
+
+document.querySelectorAll(
+  'a[href^="#"]'
+).forEach(link => {
+
+  link.addEventListener(
+    "click",
+    event => {
+
+      const id =
+        link.getAttribute("href");
+
+      if (id === "#") return;
+
+      const target =
+        document.querySelector(id);
+
+      if (!target) return;
+
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }
+  );
+
+});
+
+</script>
+
+</body>
+</html>
