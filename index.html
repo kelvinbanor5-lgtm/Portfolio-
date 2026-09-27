@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kelvin — Developer, AI, Robotics and Technology.">
+<title>Kelvin — Digital Lab</title>
+<style>
+/* ================================
+   RESET
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    background: #050505;
+    color: #f5f5f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+/* ================================
+   BACKGROUND
+================================ */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(100, 100, 255, 0.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 70%,
+            rgba(0, 220, 255, 0.06),
+            transparent 30%
+        );
+    z-index: -2;
+}
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        );
+    background-size: 60px 60px;
+    mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 80%
+    );
+    z-index: -1;
+}
+/* ================================
+   NAVIGATION
+================================ */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+    backdrop-filter: blur(14px);
+}
+.logo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+.logo span {
+    color: #7c7cff;
+}
+nav {
+    display: flex;
+    gap: 32px;
+}
+nav a {
+    font-size: 13px;
+    color: #999;
+    transition: 0.3s ease;
+}
+nav a:hover {
+    color: white;
+}
+.menu-btn {
+    display: none;
+    background: none;
+    border: none;
+}
+/* ================================
+   HERO
+================================ */
+.hero {
+    min-height: 100vh;
+    padding: 160px 8% 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+.hero-content {
+    max-width: 720px;
+}
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #888;
+    margin-bottom: 24px;
+}
+.hero h1 {
+    font-size: clamp(60px, 9vw, 130px);
+    line-height: 0.9;
+    letter-spacing: -6px;
+    text-transform: uppercase;
+}
+.hero h1 span {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px #777;
+}
+.hero-description {
+    max-width: 520px;
+    margin-top: 35px;
+    color: #999;
+    line-height: 1.7;
+    font-size: 15px;
+}
+.hero-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 35px;
+}
+.btn {
+    padding: 14px 22px;
+    border-radius: 100px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
+}
+.btn-primary {
+    background: white;
+    color: black;
+}
+.btn-primary:hover {
+    transform: translateY(-3px);
+}
+.btn-secondary {
+    border: 1px solid #333;
+    color: #aaa;
+}
+.btn-secondary:hover {
+    border-color: white;
+    color: white;
+}
+/* ================================
+   SYSTEM CARD
+================================ */
+.system-card {
+    width: 300px;
+    padding: 22px;
+    border: 1px solid #222;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.025);
+    backdrop-filter: blur(20px);
+    animation: float 5s ease-in-out infinite;
+}
+.system-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #777;
+}
+.status {
+    color: #aaa;
+}
+.status i {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #8fff9b;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.system-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 50px;
+    gap: 10px;
+}
+.system-grid small {
+    display: block;
+    color: #555;
+    font-size: 8px;
+    margin-bottom: 6px;
+}
+.system-grid strong {
+    font-size: 11px;
+}
+.system-line {
+    height: 1px;
+    background: #222;
+    margin: 25px 0;
+}
+.system-card p {
+    color: #777;
+    font-size: 11px;
+    line-height: 1.6;
+}
+@keyframes float {
+    0%,100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+/* ================================
+   SECTIONS
+================================ */
+.section {
+    padding: 140px 8%;
+}
+.section-heading {
+    margin-bottom: 70px;
+}
+.section-heading h2 {
+    font-size: clamp(42px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: -3px;
+}
+/* ================================
+   PROJECTS
+================================ */
+.projects {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+.project-card {
+    min-height: 420px;
+    position: relative;
+    padding: 30px;
+    border: 1px solid #222;
+    border-radius: 22px;
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.045),
+        rgba(255,255,255,0.01)
+    );
+    overflow: hidden;
+    transition: 0.4s ease;
+}
+.project-card::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(
+        circle,
+        rgba(120,120,255,0.12),
+        transparent 70%
+    );
+    top: -100px;
+    right: -100px;
+}
+.project-card:hover {
+    transform: translateY(-8px);
+    border-color: #444;
+}
+.project-number {
+    color: #555;
+    font-size: 12px;
+}
+.project-content {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+}
+.project-type {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #777;
+    margin-bottom: 10px;
+}
+.project-content h3 {
+    font-size: 35px;
+    margin-bottom: 14px;
+}
+.project-content p:not(.project-type) {
+    max-width: 430px;
+    color: #888;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.project-link {
+    display: inline-block;
+    margin-top: 22px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+/* ================================
+   ABOUT
+================================ */
+.about-content {
+    max-width: 800px;
+}
+.about-large {
+    font-size: clamp(30px, 5vw, 60px);
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 35px;
+}
+.about-content > p:last-child {
+    max-width: 550px;
+    color: #888;
+    line-height: 1.8;
+}
+/* ================================
+   CONTACT
+================================ */
+.contact {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.contact h2 {
+    font-size: clamp(55px, 9vw, 120px);
+    line-height: 0.9;
+    letter-spacing: -5px;
+}
+.contact h2 span {
+    display: block;
+    color: #777;
+}
+.contact-link {
+    display: inline-block;
+    margin-top: 45px;
+    font-size: 14px;
+    border-bottom: 1px solid #555;
+    padding-bottom: 8px;
+}
+/* ================================
+   FOOTER
+================================ */
+footer {
+    padding: 30px 8%;
+    border-top: 1px solid #1c1c1c;
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+/* ================================
+   MOBILE
+================================ */
+@media (max-width: 800px) {
+    .navbar {
+        padding: 20px 6%;
+    }
+    nav {
+        display: none;
+    }
+    .hero {
+        min-height: auto;
+        padding-top: 150px;
+        padding-bottom: 100px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .hero h1 {
+        font-size: clamp(55px, 17vw, 90px);
+        letter-spacing: -4px;
+    }
+    .system-card {
+        width: 100%;
+        max-width: 360px;
+    }
+    .projects {
+        grid-template-columns: 1fr;
+    }
+    .project-card {
+        min-height: 380px;
+    }
+    .section {
+        padding: 100px 6%;
+    }
+    .contact h2 {
+        letter-spacing: -3px;
+    }
+    footer {
+        padding: 25px 6%;
+    }
+}
+</style>
+</head>
+<body>
+<header class="navbar">
+<a href="#" class="logo">
+    KELVIN<span>.</span>
+</a>
+<nav>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+</nav>
+</header>
+<main>
+<section class="hero">
+<div class="hero-content">
+    <p class="eyebrow">
+        DEVELOPER · AI · ROBOTICS · TECHNOLOGY
+    </p>
+    <h1>
+        Building
+        <span>digital</span>
+        experiences.
+    </h1>
+    <p class="hero-description">
+        Turning ideas into useful, creative and meaningful
+        technology through code, artificial intelligence
+        and innovation.
+    </p>
+    <div class="hero-actions">
+        <a href="#work" class="btn btn-primary">
+            Explore Work
+        </a>
+        <a href="#about" class="btn btn-secondary">
+            About Me
+        </a>
+    </div>
+</div>
+<div class="system-card">
+    <div class="system-top">
+        <span>KL // DIGITAL LAB</span>
+        <span class="status">
+            <i></i> ONLINE
+        </span>
+    </div>
+    <div class="system-grid">
+        <div>
+            <small>FOCUS</small>
+            <strong>TECH</strong>
+        </div>
+        <div>
+            <small>MODE</small>
+            <strong>BUILD</strong>
+        </div>
+        <div>
+            <small>STATUS</small>
+            <strong>ACTIVE</strong>
+        </div>
+    </div>
+    <div class="system-line"></div>
+    <p>
+        Exploring the intersection of technology,
+        creativity and problem solving.
+    </p>
+</div>
+</section>
+<section id="work" class="section">
+<div class="section-heading">
+    <p class="eyebrow">
+        01 — SELECTED WORK
+    </p>
+    <h2>
+        Things being built.
+    </h2>
+</div>
+<div class="projects">
+    <article class="project-card">
+        <span class="project-number">01</span>
+        <div class="project-content">
+            <p class="project-type">
+                ENVIRONMENTAL TECHNOLOGY
+            </p>
+            <h3>ClimaSense</h3>
+            <p>
+                An environmental monitoring system
+                designed to turn real-world data into
+                useful insights.
+            </p>
+            <a href="#" class="project-link">
+                View Project →
+            </a>
+        </div>
+    </article>
+    <article class="project-card">
+        <span class="project-number">02</span>
+        <div class="project-content">
+            <p class="project-type">
+                WEB PLATFORM
+            </p>
+            <h3>Student Connect</h3>
+            <p>
+                A social platform concept designed
+                to help students connect, collaborate
+                and share opportunities.
+            </p>
+            <a href="#" class="project-link">
+                View Project →
+            </a>
+        </div>
+    </article>
+    <article class="project-card">
+        <span class="project-number">03</span>
+        <div class="project-content">
+            <p class="project-type">
+                ARTIFICIAL INTELLIGENCE
+            </p>
+            <h3>AI for Good</h3>
+            <p>
+                AI-focused projects created around
+                real-world problems and positive impact.
+            </p>
+            <a href="#" class="project-link">
+                View Project →
+            </a>
+        </div>
+    </article>
+    <article class="project-card">
+        <span class="project-number">04</span>
+        <div class="project-content">
+            <p class="project-type">
+                ROBOTICS
+            </p>
+            <h3>Robotics</h3>
+            <p>
+                Engineering, programming and problem
+                solving through robotics competitions
+                and technical challenges.
+            </p>
+            <a href="#" class="project-link">
+                View Project →
+            </a>
+        </div>
+    </article>
+</div>
+</section>
+<section id="about" class="section about">
+<div class="section-heading">
+    <p class="eyebrow">
+        02 — ABOUT
+    </p>
+    <h2>
+        Curious by nature.<br>
+        Builder by choice.
+    </h2>
+</div>
+<div class="about-content">
+    <p class="about-large">
+        Technology is more interesting when it
+        solves something real.
+    </p>
+    <p>
+        Focused on building digital experiences,
+        experimenting with AI, exploring robotics
+        and learning through creating.
+    </p>
+</div>
+</section>
+<section id="contact" class="section contact">
+<p class="eyebrow">
+    03 — CONTACT
+</p>
+<h2>
+    Have an idea?
+    <span>Let's build it.</span>
+</h2>
+<a
+    href="mailto:your@email.com"
+    class="contact-link"
+>
+    Get in touch →
+</a>
+</section>
+</main>
+<footer>
+<span>
+    © 2026 KELVIN
+</span>
+<span>
+    DIGITAL LAB
+</span>
+</footer>
+<script>
+/* Smooth project-card interaction */
+document.querySelectorAll(".project-card").forEach(card => {
+    card.addEventListener("mousemove", event => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        card.style.setProperty(
+            "--mouse-x",
+            `${x}px`
+        );
+        card.style.setProperty(
+            "--mouse-y",
+            `${y}px`
+        );
+    });
+});
+/* Simple reveal animation */
+const observer = new IntersectionObserver(
+    entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform =
+                    "translateY(0)";
+            }
+        });
+    },
+    {
+        threshold: 0.12
+    }
+);
+document.querySelectorAll(
+    ".section-heading, .project-card, .about-content, .contact h2"
+).forEach(element => {
+    element.style.opacity = "0";
+    element.style.transform = "translateY(25px)";
+    element.style.transition =
+        "opacity 0.8s ease, transform 0.8s ease";
+    observer.observe(element);
+});
+</script>
+</body>
+</html>
